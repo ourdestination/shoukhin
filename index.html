@@ -242,6 +242,59 @@
     .img-popup-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .img-popup-timer { position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%); color: white; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 15px; font-size: 12px; }
 
+    /* ---- Product Detail Modal ---- */
+    #productDetailModal .modal-content { max-width: 480px; padding: 0; overflow: hidden; }
+    #productDetailModal .pd-scroll { max-height: 90vh; overflow-y: auto; }
+    #productDetailModal .close-btn { background: rgba(255,255,255,0.85); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; top: 10px; right: 10px; font-size: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    /* Two column layout by default: photo left, details/sales/rating right. Stacks only on very narrow screens. */
+    #productDetailModal .modal-content { max-width: 560px; }
+    .pd-top-flex { display: flex; flex-wrap: nowrap; align-items: flex-start; }
+    .pd-media { flex: 0 0 40%; max-width: 40%; }
+    .pd-info { flex: 1 1 auto; min-width: 0; }
+    .pd-main-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; cursor: zoom-in; background: #f5f5f5; }
+    .pd-thumbs { display: flex; gap: 5px; padding: 8px 6px; overflow-x: auto; }
+    .pd-thumb { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; opacity: 0.75; transition: 0.2s; }
+    .pd-thumb.active, .pd-thumb:hover { border-color: var(--primary); opacity: 1; }
+    .pd-body { padding: 5px 12px 18px 6px; }
+    .pd-reviews-section .pd-body { padding: 0 16px 18px; }
+    .pd-reviews-section { width: 100%; }
+    .pd-name { font-size: 0.98rem; font-weight: 700; margin-bottom: 4px; line-height: 1.25; }
+    .pd-rating-row { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #666; margin-bottom: 4px; flex-wrap: wrap; }
+    .pd-rating-row .fa-star, .pd-rating-row .fa-star-half-stroke { color: #f5a623; }
+    .pd-sold-row { font-size: 0.72rem; color: #777; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .pd-info #pdPrice { font-size: 1.05rem !important; }
+    .pd-label { font-size: 0.75rem; font-weight: 600; color: var(--dark); display: block; margin: 8px 0 4px; }
+    .pd-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pd-chip { padding: 4px 10px; border-radius: 20px; border: 1.5px solid #ddd; background: #fafafa; font-size: 0.72rem; cursor: pointer; transition: 0.2s; }
+    .pd-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .pd-qty-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
+    .pd-qty-stepper { display: flex; align-items: center; gap: 0; border: 1.5px solid #ddd; border-radius: 20px; overflow: hidden; }
+    .pd-qty-stepper button { width: 26px; height: 26px; border: none; background: #f0f0f0; font-size: 0.9rem; cursor: pointer; font-weight: 700; color: var(--primary); }
+    .pd-qty-stepper span { width: 26px; text-align: center; font-weight: 600; font-size: 0.82rem; }
+    .pd-action-row { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+    .pd-action-row .form-btn { margin-top: 0; }
+    #productDetailModal .form-btn { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.78rem; padding: 8px 6px; }
+    /* Only stack into a single column on very small screens where two columns get too cramped */
+    @media (max-width: 360px) {
+      .pd-top-flex { flex-wrap: wrap; }
+      .pd-media, .pd-info { flex: 1 1 100%; max-width: 100%; }
+      .pd-body { padding: 5px 16px 18px; }
+      .pd-action-row { flex-direction: row; }
+    }
+    .pd-review-summary { display: flex; align-items: center; gap: 10px; margin: 8px 0 12px; }
+    .pd-review-summary .pd-avg-num { font-size: 1.6rem; font-weight: 700; color: var(--dark); }
+    .pd-review-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+    .pd-review-item:last-child { border-bottom: none; }
+    .pd-review-item .pd-review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+    .pd-review-item .pd-review-name { font-weight: 600; font-size: 0.85rem; }
+    .pd-review-item .pd-review-date { font-size: 0.72rem; color: #999; }
+    .pd-review-item .pd-review-comment { font-size: 0.82rem; color: #555; margin-top: 2px; }
+    .pd-no-review { font-size: 0.82rem; color: #888; padding: 6px 0; }
+    .pd-star-input { font-size: 1.4rem; color: #ddd; cursor: pointer; margin-bottom: 6px; }
+    .pd-star-input i { margin-right: 4px; transition: 0.15s; }
+    .pd-star-input i.active { color: #f5a623; }
+    .pd-add-review { margin-top: 15px; border-top: 1px dashed #ddd; padding-top: 12px; }
+
     input, select, textarea { width: 100%; padding: 9px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem; }
     .form-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 15px; cursor: pointer; margin-top: 8px; font-weight: 600; }
 
@@ -665,6 +718,76 @@
     </div>
   </div>
 
+  <!-- Product Detail Modal -->
+  <div id="productDetailModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('productDetailModal')">&times;</span>
+      <div class="pd-scroll">
+        <div class="pd-top-flex">
+          <!-- Left: Product Photo -->
+          <div class="pd-media">
+            <img id="pdMainImg" class="pd-main-img" src="" alt="" onclick="showFullImage(document.getElementById('pdMainImg').src)">
+            <div id="pdThumbs" class="pd-thumbs"></div>
+          </div>
+
+          <!-- Right: Product Details, Total Sales & Rating -->
+          <div class="pd-info">
+            <div class="pd-body">
+              <h3 id="pdName" class="pd-name"></h3>
+              <div id="pdRatingRow" class="pd-rating-row"></div>
+              <div id="pdSoldRow" class="pd-sold-row"><i class="fa-solid fa-bag-shopping"></i> <span id="pdSoldText">0 sold</span></div>
+              <div id="pdPrice" class="price" style="font-size:1.3rem;"></div>
+
+              <div id="pdColorSection" style="display:none;">
+                <label class="pd-label">Color:</label>
+                <div id="pdColorOptions" class="pd-chip-row"></div>
+              </div>
+              <div id="pdSizeSection" style="display:none;">
+                <label class="pd-label">Size:</label>
+                <div id="pdSizeOptions" class="pd-chip-row"></div>
+              </div>
+
+              <div class="pd-qty-row">
+                <label class="pd-label" style="margin:0;">Quantity:</label>
+                <div class="pd-qty-stepper">
+                  <button type="button" onclick="changePdQty(-1)">−</button>
+                  <span id="pdQty">1</span>
+                  <button type="button" onclick="changePdQty(1)">+</button>
+                </div>
+              </div>
+              <div id="pdStockMsg" style="font-size:0.78rem; color:#dc3545; margin:5px 0 0;"></div>
+
+              <div class="pd-action-row">
+                <button class="form-btn" id="pdAddToCartBtn" onclick="addToCartFromDetail()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                <button class="form-btn" style="background:#495057;" onclick="viewCartFromDetail()"><i class="fa-solid fa-cart-shopping"></i> View Cart</button>
+              </div>
+              <button class="form-btn" style="background:#25D366; margin-top:8px;" onclick="orderViaWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Order via WhatsApp</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Below: Customer Reviews (full width) -->
+        <div class="pd-reviews-section">
+          <div class="pd-body" style="padding-top:0;">
+            <hr style="margin:16px 0;">
+
+            <h4><i class="fa-solid fa-star" style="color:#f5a623;"></i> Ratings &amp; Reviews</h4>
+            <div id="pdReviewSummary" class="pd-review-summary"></div>
+            <div id="pdReviewList" class="pd-review-list"></div>
+
+            <div class="pd-add-review">
+              <label class="pd-label" style="margin-top:0;">Write a Review:</label>
+              <div id="pdReviewStarsInput" class="pd-star-input"></div>
+              <input type="text" id="pdReviewName" placeholder="Your Name">
+              <textarea id="pdReviewComment" placeholder="Share your experience with this product..." rows="2"></textarea>
+              <button class="form-btn" onclick="submitProductReview()"><i class="fa-solid fa-paper-plane"></i> Submit Review</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Edit Category Modal -->
   <div id="editCategoryModal" class="modal">
     <div class="modal-content">
@@ -907,7 +1030,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-    import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove, push } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDdlwyradz1KD4-Mu5vWT47Zp-ysuqRM1A",
@@ -930,6 +1053,7 @@
     window.onValue = onValue;
     window.update = update;
     window.remove = remove;
+    window.push = push;
   </script>
 
   <script>
@@ -1468,7 +1592,7 @@
         <div class="product-card">
           ${(p.offer && isOfferActive(p)) ? `<div class="offer-ribbon">${escapeHtml(p.offer)}</div>` : ''}
           ${discountTagHtml}
-          <img src="${mainImg}" class="product-img" id="img-${p.id}" alt="${p.name}" loading="lazy" onclick="handleProductImageTap('${p.id}', '${mainImg}')">
+          <img src="${mainImg}" class="product-img" id="img-${p.id}" alt="${p.name}" loading="lazy" onclick="openProductDetail('${p.id}')">
           <div class="product-info">
             <h4 class="product-title">${p.name}</h4>
             ${variantHtml}
@@ -1482,6 +1606,298 @@
           </div>
         </div>
       `;
+    }
+
+    /* ================= Product Detail Modal (Image / Color / Size / Cart / WhatsApp / Rating / Reviews) ================= */
+    let currentDetailProduct = null;
+    let pdSelectedColor = '';
+    let pdSelectedSize = '';
+    let pdQtyValue = 1;
+    let pdReviewRatingValue = 5;
+
+    function getProductReviewsArray(p) {
+      if (!p || !p.reviews) return [];
+      return Array.isArray(p.reviews) ? p.reviews.filter(Boolean) : Object.values(p.reviews).filter(Boolean);
+    }
+
+    function getProductRatingStats(p) {
+      const reviews = getProductReviewsArray(p);
+      if (reviews.length === 0) return { avg: 0, count: 0 };
+      const sum = reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0);
+      return { avg: sum / reviews.length, count: reviews.length };
+    }
+
+    function renderStarsHtml(avg) {
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        if (avg >= i - 0.25) html += '<i class="fa-solid fa-star"></i>';
+        else if (avg >= i - 0.75) html += '<i class="fa-solid fa-star-half-stroke"></i>';
+        else html += '<i class="fa-regular fa-star" style="color:#ddd;"></i>';
+      }
+      return html;
+    }
+
+    function openProductDetail(pId) {
+      const p = products.find(item => item.id === pId);
+      if (!p) return;
+
+      currentDetailProduct = p;
+      pdSelectedColor = (p.colors && p.colors.length > 0) ? p.colors[0] : '';
+      pdSelectedSize = (p.sizes && p.sizes.length > 0) ? p.sizes[0] : '';
+      pdQtyValue = 1;
+      pdReviewRatingValue = 5;
+
+      const images = (p.images && p.images.length > 0) ? p.images : [p.img || 'https://via.placeholder.com/400'];
+
+      document.getElementById('pdMainImg').src = images[0];
+      const thumbsEl = document.getElementById('pdThumbs');
+      thumbsEl.innerHTML = '';
+      if (images.length > 1) {
+        images.forEach((img, idx) => {
+          thumbsEl.innerHTML += `<img src="${img}" class="pd-thumb ${idx === 0 ? 'active' : ''}" onclick="selectPdImage('${img}', this)">`;
+        });
+        thumbsEl.style.display = 'flex';
+      } else {
+        thumbsEl.style.display = 'none';
+      }
+
+      document.getElementById('pdName').innerText = p.name;
+
+      const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+      document.getElementById('pdPrice').innerHTML = hasDiscount
+        ? `<span class="old-price">${p.price} ৳</span>${p.discountPrice} ৳`
+        : `${p.price} ৳`;
+
+      const stats = getProductRatingStats(p);
+      document.getElementById('pdRatingRow').innerHTML = stats.count > 0
+        ? `${renderStarsHtml(stats.avg)} <span>${stats.avg.toFixed(1)} (${stats.count} review${stats.count > 1 ? 's' : ''})</span>`
+        : `${renderStarsHtml(0)} <span>No reviews yet</span>`;
+
+      document.getElementById('pdSoldText').innerText = `${p.sold || 0} sold`;
+
+      renderPdVariantOptions(p);
+      renderPdQty();
+      renderPdReviews(p);
+      renderPdReviewStarsInput();
+      document.getElementById('pdReviewName').value = '';
+      document.getElementById('pdReviewComment').value = '';
+
+      openModal('productDetailModal');
+    }
+
+    function selectPdImage(src, el) {
+      document.getElementById('pdMainImg').src = src;
+      document.querySelectorAll('#pdThumbs .pd-thumb').forEach(t => t.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function renderPdVariantOptions(p) {
+      const colorSection = document.getElementById('pdColorSection');
+      const sizeSection = document.getElementById('pdSizeSection');
+      const colorBox = document.getElementById('pdColorOptions');
+      const sizeBox = document.getElementById('pdSizeOptions');
+
+      if (p.colors && p.colors.length > 0) {
+        colorSection.style.display = 'block';
+        colorBox.innerHTML = p.colors.map(c =>
+          `<button type="button" class="pd-chip ${c === pdSelectedColor ? 'active' : ''}" onclick="selectPdColor('${c.replace(/'/g, "\\'")}', this)">${escapeHtml(c)}</button>`
+        ).join('');
+      } else {
+        colorSection.style.display = 'none';
+        colorBox.innerHTML = '';
+      }
+
+      if (p.sizes && p.sizes.length > 0) {
+        sizeSection.style.display = 'block';
+        sizeBox.innerHTML = p.sizes.map(s =>
+          `<button type="button" class="pd-chip ${s === pdSelectedSize ? 'active' : ''}" onclick="selectPdSize('${s.replace(/'/g, "\\'")}', this)">${escapeHtml(s)}</button>`
+        ).join('');
+      } else {
+        sizeSection.style.display = 'none';
+        sizeBox.innerHTML = '';
+      }
+    }
+
+    function selectPdColor(c, el) {
+      pdSelectedColor = c;
+      document.querySelectorAll('#pdColorOptions .pd-chip').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function selectPdSize(s, el) {
+      pdSelectedSize = s;
+      document.querySelectorAll('#pdSizeOptions .pd-chip').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function changePdQty(delta) {
+      const p = currentDetailProduct;
+      if (!p) return;
+      const maxStock = p.stock || 0;
+      let newQty = pdQtyValue + delta;
+      if (newQty < 1) newQty = 1;
+      if (maxStock > 0 && newQty > maxStock) {
+        newQty = maxStock;
+        document.getElementById('pdStockMsg').innerText = `Only ${maxStock} in stock!`;
+      } else {
+        document.getElementById('pdStockMsg').innerText = '';
+      }
+      pdQtyValue = newQty;
+      renderPdQty();
+    }
+
+    function renderPdQty() {
+      document.getElementById('pdQty').innerText = pdQtyValue;
+      const isOut = !currentDetailProduct || (currentDetailProduct.stock || 0) <= 0;
+      const addBtn = document.getElementById('pdAddToCartBtn');
+      addBtn.disabled = isOut;
+      addBtn.innerHTML = isOut ? 'Out of Stock' : '<i class="fa-solid fa-cart-plus"></i> Add to Cart';
+    }
+
+    function addToCartFromDetail() {
+      const p = currentDetailProduct;
+      if (!p || p.stock <= 0) return;
+
+      const effectivePrice = (p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price) ? p.discountPrice : p.price;
+      const colorStr = pdSelectedColor || 'Standard';
+      const sizeStr = pdSelectedSize || 'Standard';
+      const itemImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://via.placeholder.com/60');
+
+      const existing = cart.find(c => c.id === p.id && c.color === colorStr && c.size === sizeStr);
+      if (existing) {
+        if (existing.qty + pdQtyValue <= p.stock) existing.qty += pdQtyValue;
+        else { alert('No more stock available!'); return; }
+      } else {
+        cart.push({
+          id: p.id,
+          name: p.name,
+          price: effectivePrice,
+          color: colorStr,
+          size: sizeStr,
+          qty: pdQtyValue,
+          img: itemImg
+        });
+      }
+
+      updateCartUI();
+      const cartBtn = document.getElementById('cartBtn');
+      if (cartBtn) {
+        cartBtn.classList.add('cart-animate');
+        setTimeout(() => cartBtn.classList.remove('cart-animate'), 400);
+      }
+      alert('Added to cart!');
+    }
+
+    function viewCartFromDetail() {
+      closeModal('productDetailModal');
+      openModal('cartModal');
+    }
+
+    function orderViaWhatsapp() {
+      const p = currentDetailProduct;
+      if (!p) return;
+
+      const effectivePrice = (p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price) ? p.discountPrice : p.price;
+      const colorStr = pdSelectedColor || 'Standard';
+      const sizeStr = pdSelectedSize || 'Standard';
+
+      let msg = `Hi, I would like to order:\n\n`;
+      msg += `Product: ${p.name}\n`;
+      if (p.colors && p.colors.length > 0) msg += `Color: ${colorStr}\n`;
+      if (p.sizes && p.sizes.length > 0) msg += `Size: ${sizeStr}\n`;
+      msg += `Quantity: ${pdQtyValue}\n`;
+      msg += `Price: ${effectivePrice} ৳ (Total: ${effectivePrice * pdQtyValue} ৳)\n`;
+
+      const waBtn = document.getElementById('floatingWhatsappBtn');
+      let waNumber = '';
+      if (waBtn && waBtn.href) {
+        const match = waBtn.href.match(/wa\.me\/(\d+)/);
+        if (match) waNumber = match[1];
+      }
+
+      const waUrl = waNumber
+        ? `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+      window.open(waUrl, '_blank');
+    }
+
+    function renderPdReviewStarsInput() {
+      const box = document.getElementById('pdReviewStarsInput');
+      box.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        box.innerHTML += `<i class="fa-solid fa-star ${i <= pdReviewRatingValue ? 'active' : ''}" onclick="setPdReviewRating(${i})"></i>`;
+      }
+    }
+
+    function setPdReviewRating(n) {
+      pdReviewRatingValue = n;
+      renderPdReviewStarsInput();
+    }
+
+    function renderPdReviews(p) {
+      const reviews = getProductReviewsArray(p).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      const stats = getProductRatingStats(p);
+
+      document.getElementById('pdReviewSummary').innerHTML = stats.count > 0
+        ? `<span class="pd-avg-num">${stats.avg.toFixed(1)}</span><div>${renderStarsHtml(stats.avg)}<div style="font-size:0.75rem; color:#888;">${stats.count} review${stats.count > 1 ? 's' : ''}</div></div>`
+        : '';
+
+      const listEl = document.getElementById('pdReviewList');
+      if (reviews.length === 0) {
+        listEl.innerHTML = '<div class="pd-no-review">No reviews yet. Be the first to review this product!</div>';
+        return;
+      }
+
+      listEl.innerHTML = reviews.map(r => `
+        <div class="pd-review-item">
+          <div class="pd-review-head">
+            <span class="pd-review-name">${escapeHtml(r.name || 'Anonymous')}</span>
+            <span class="pd-review-date">${escapeHtml(r.date || '')}</span>
+          </div>
+          <div>${renderStarsHtml(Number(r.rating) || 0)}</div>
+          ${r.comment ? `<div class="pd-review-comment">${escapeHtml(r.comment)}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function submitProductReview() {
+      const p = currentDetailProduct;
+      if (!p) return;
+
+      const name = document.getElementById('pdReviewName').value.trim();
+      const comment = document.getElementById('pdReviewComment').value.trim();
+
+      if (!name) return alert('Please enter your name.');
+      if (!pdReviewRatingValue) return alert('Please select a rating.');
+
+      const review = {
+        name: name,
+        rating: pdReviewRatingValue,
+        comment: comment,
+        date: new Date().toLocaleDateString('en-US'),
+        createdAt: Date.now()
+      };
+
+      if (window.db) {
+        const reviewsRef = window.ref(window.db, 'products/' + p.id + '/reviews');
+        const newRef = window.push(reviewsRef);
+        window.set(newRef, review);
+      }
+
+      if (!p.reviews) p.reviews = {};
+      p.reviews['local-' + review.createdAt] = review;
+
+      document.getElementById('pdReviewName').value = '';
+      document.getElementById('pdReviewComment').value = '';
+      pdReviewRatingValue = 5;
+      renderPdReviewStarsInput();
+      renderPdReviews(p);
+
+      const stats = getProductRatingStats(p);
+      document.getElementById('pdRatingRow').innerHTML = `${renderStarsHtml(stats.avg)} <span>${stats.avg.toFixed(1)} (${stats.count} review${stats.count > 1 ? 's' : ''})</span>`;
+
+      alert('Thank you for your review!');
     }
 
     function directAddToCart(pId, event) {
@@ -1854,7 +2270,8 @@
           if(prod) {
             const pRef = window.ref(window.db, 'products/' + c.id);
             const newStock = Math.max(0, prod.stock - c.qty);
-            window.update(pRef, { stock: newStock });
+            const newSold = (prod.sold || 0) + c.qty;
+            window.update(pRef, { stock: newStock, sold: newSold });
           }
         }
       });
