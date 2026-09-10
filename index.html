@@ -67,6 +67,19 @@
     .logo-img { width: 42px; height: 42px; border-radius: 0; object-fit: cover; border: none; cursor: pointer; }
     
     #siteTitle { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
+    .site-code-header { display: block; font-size: 0.62rem; font-weight: 400; opacity: 0.85; letter-spacing: 0.5px; margin-top: 1px; }
+    .site-code-hero { display: block; font-size: 0.85rem; font-weight: 600; color: var(--secondary); margin-top: -4px; letter-spacing: 0.5px; }
+    .live-visitor-badge {
+      display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.75);
+      padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--dark); margin-top: 2px;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 0 0 rgba(46,204,113,0.7); animation: liveDotPulse 1.5s infinite; }
+    @keyframes liveDotPulse {
+      0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
+      100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
+    }
+    .admin-live-box { display: inline-flex; align-items: center; gap: 6px; background: #e8f9f0; color: #1e8449; padding: 4px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; }
 
     .nav-btns { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
     .nav-btns button {
@@ -357,7 +370,10 @@
   <header>
     <div class="logo-container">
       <img id="siteLogo" src="https://via.placeholder.com/50?text=Logo" alt="Logo" class="logo-img" loading="lazy" onclick="showFullImage(this.src)">
-      <h2 id="siteTitle">Shoukhin</h2>
+      <div>
+        <h2 id="siteTitle">Shoukhin</h2>
+        <span id="siteCodeHeader" class="site-code-header"></span>
+      </div>
     </div>
     <div class="nav-btns">
       <button id="notifBtn" onclick="openNotifModal()" style="display:none;">
@@ -372,6 +388,8 @@
   <div class="hero">
     <img id="heroSiteLogo" src="https://via.placeholder.com/100?text=Logo" alt="Logo" class="hero-logo-img" loading="lazy" onclick="showFullImage(this.src)">
     <h1>Shoukhin Online Shop</h1>
+    <span id="siteCodeHero" class="site-code-hero"></span>
+    <div class="live-visitor-badge"><span class="live-dot"></span> লাইভ ভিজিটর: <b id="liveVisitorCount">0</b></div>
   </div>
 
   <div class="container">
@@ -398,8 +416,9 @@
 
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-dashboard">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <h2><i class="fa-solid fa-gauge"></i> Shop Management (Admin)</h2>
+        <div class="admin-live-box"><span class="live-dot" style="width:7px;height:7px;"></span> Live Visitors: <span id="adminLiveVisitorCount">0</span></div>
         <button onclick="logoutAdmin()" style="background: red; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
       </div>
       <hr style="margin: 10px 0;">
@@ -699,6 +718,12 @@
           <label style="font-size: 13px; margin-top: 5px; display: block;">Rocket Number:</label>
           <input type="text" id="rocketNum" placeholder="e.g. 01345409887">
           <button onclick="updatePaymentNumbers()" class="form-btn" style="background: #28a745;">Save Payment Numbers</button>
+
+          <hr style="margin: 20px 0;">
+          <h4>Site Personal Code / ID</h4>
+          <label style="font-size: 13px; margin-top: 5px; display: block;">এই কোডটি হেডার ও হোমপেজের নামের নিচে দেখানো হবে:</label>
+          <input type="text" id="settingSiteCode" placeholder="e.g. SH-2026-001">
+          <button onclick="updateSiteCode()" class="form-btn" style="background:#6610f2;">Save Site Code</button>
 
           <hr style="margin: 20px 0;">
           <label><b>Change Admin Password:</b></label>
@@ -1030,7 +1055,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-    import { getDatabase, ref, set, onValue, update, remove, push } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove, push, onDisconnect } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDdlwyradz1KD4-Mu5vWT47Zp-ysuqRM1A",
@@ -1054,6 +1079,7 @@
     window.update = update;
     window.remove = remove;
     window.push = push;
+    window.onDisconnect = onDisconnect;
   </script>
 
   <script>
@@ -1112,6 +1138,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       initApp();
       updateVisitorCount();
+      initLiveVisitorPresence();
       populateDistricts();
 
       document.getElementById('pImgFile').addEventListener('change', function(e) {
@@ -1342,6 +1369,11 @@
                 waLink.href = `https://wa.me/${settings.socialLinks.whatsappNumber.replace(/[^0-9]/g, '')}`;
                 document.getElementById('settingWhatsappNumber').value = settings.socialLinks.whatsappNumber;
               }
+            }
+            if(settings.siteCode) {
+              document.getElementById('siteCodeHeader').innerText = settings.siteCode;
+              document.getElementById('siteCodeHero').innerText = settings.siteCode;
+              document.getElementById('settingSiteCode').value = settings.siteCode;
             }
             if(settings.adminPass) adminPassword = settings.adminPass;
             if(settings.paymentNumbers) {
@@ -3373,6 +3405,16 @@
       }
     }
 
+    function updateSiteCode() {
+      const code = document.getElementById('settingSiteCode').value.trim();
+      if(window.db) {
+        window.update(window.ref(window.db, 'settings'), { siteCode: code });
+        document.getElementById('siteCodeHeader').innerText = code;
+        document.getElementById('siteCodeHero').innerText = code;
+        alert("Site Code updated!");
+      }
+    }
+
     function changeAdminPassword() {
       const newPass = document.getElementById('newAdminPass').value.trim();
       if(!newPass) return alert("Enter new password!");
@@ -3383,6 +3425,42 @@
         alert("Admin password updated!");
         document.getElementById('newAdminPass').value = '';
       }
+    }
+
+    function initLiveVisitorPresence(retryCount) {
+      retryCount = retryCount || 0;
+      if(!window.db || !window.onDisconnect) {
+        if(retryCount < 20) {
+          setTimeout(() => initLiveVisitorPresence(retryCount + 1), 300);
+        }
+        return;
+      }
+
+      const sessionKey = 'liveSessionId';
+      let sessionId = sessionStorage.getItem(sessionKey);
+      if(!sessionId) {
+        sessionId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        sessionStorage.setItem(sessionKey, sessionId);
+      }
+
+      const myPresenceRef = window.ref(window.db, 'presence/' + sessionId);
+      const connectedRef = window.ref(window.db, '.info/connected');
+
+      window.onValue(connectedRef, (snap) => {
+        if(snap.val() === true) {
+          window.onDisconnect(myPresenceRef).remove();
+          window.set(myPresenceRef, true);
+        }
+      });
+
+      window.onValue(window.ref(window.db, 'presence'), (snapshot) => {
+        const data = snapshot.val();
+        const count = data ? Object.keys(data).length : 0;
+        const heroEl = document.getElementById('liveVisitorCount');
+        const adminEl = document.getElementById('adminLiveVisitorCount');
+        if(heroEl) heroEl.innerText = count;
+        if(adminEl) adminEl.innerText = count;
+      });
     }
 
     function updateVisitorCount() {
