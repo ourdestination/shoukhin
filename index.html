@@ -73,6 +73,14 @@
       display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.75);
       padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--dark); margin-top: 2px;
     }
+    .live-visitor-badge-header {
+      display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.25);
+      padding: 2px 10px; border-radius: 14px; font-size: 0.72rem; font-weight: 600; color: #fff; margin-top: 2px;
+    }
+    .live-visitor-badge-header i {
+      font-size: 0.72rem;
+      color: #fff;
+    }
     .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 0 0 rgba(46,204,113,0.7); animation: liveDotPulse 1.5s infinite; }
     @keyframes liveDotPulse {
       0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.6); }
@@ -373,6 +381,7 @@
       <div>
         <h2 id="siteTitle">Shoukhin</h2>
         <span id="siteCodeHeader" class="site-code-header"></span>
+        <div class="live-visitor-badge-header"><i class="fa-solid fa-user"></i> <b id="liveVisitorCount">0</b></div>
       </div>
     </div>
     <div class="nav-btns">
@@ -389,7 +398,6 @@
     <img id="heroSiteLogo" src="https://via.placeholder.com/100?text=Logo" alt="Logo" class="hero-logo-img" loading="lazy" onclick="showFullImage(this.src)">
     <h1>Shoukhin Online Shop</h1>
     <span id="siteCodeHero" class="site-code-hero"></span>
-    <div class="live-visitor-badge"><span class="live-dot"></span> লাইভ ভিজিটর: <b id="liveVisitorCount">0</b></div>
   </div>
 
   <div class="container">
