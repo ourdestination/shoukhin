@@ -2386,13 +2386,8 @@
     }
 
     function openAdminCheck() {
-      if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-        document.getElementById('adminPanel').style.display = 'block';
-        document.getElementById('notifBtn').style.display = 'inline-block';
-        window.scrollTo({ top: document.getElementById('adminPanel').offsetTop, behavior: 'smooth' });
-      } else {
-        openModal('adminLoginModal');
-      }
+      // Admin management has moved to its own separate portal page.
+      window.location.href = 'admin.html';
     }
 
     function loginAdmin() {
