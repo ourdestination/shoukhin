@@ -239,11 +239,52 @@
     @media (max-width:600px) { .offer-admin-grid { grid-template-columns:1fr; } .offer-admin-full { grid-column:auto; } }
 
     .discount-badge {
-      position: absolute; top: 15px; left: -35px; transform: rotate(-45deg);
-      background: #e91e63; color: white; padding: 3px 35px; font-size: 10px;
-      font-weight: bold; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 10; text-align: center; white-space: nowrap;
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      width: 48px;
+      height: 21px;
+      padding: 0 4px;
+      background: #1976d2;
+      color: #fff;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.98);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.30);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-sizing: border-box;
+      letter-spacing: 0.1px;
     }
+    .discount-badge .discount-percent { display:inline-block; font-size:9px; line-height:1; white-space:nowrap; }
+    .discount-badge .discount-off { display:inline-block; font-size:9px; line-height:1; margin-left:3px; white-space:nowrap; }
+
+    /* Shoukhin Agent / Promo Code management */
+    .agent-admin-card {
+      background:#fff; border:1px solid #ead7ef; border-radius:12px; padding:14px;
+      box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:14px;
+    }
+    .agent-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .agent-form-full { grid-column:1 / -1; }
+    .agent-profile-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin-top:12px; }
+    .agent-profile-card { background:#fff; border:1px solid #ead7ef; border-radius:14px; padding:14px; box-shadow:0 4px 14px rgba(0,0,0,0.06); }
+    .agent-profile-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .agent-avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; background:linear-gradient(45deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0; }
+    .agent-name { font-weight:700; color:var(--dark); line-height:1.2; }
+    .agent-status { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; margin-top:3px; }
+    .agent-status.active { background:#e8f7ee; color:#1e8449; }
+    .agent-status.inactive { background:#fdecec; color:#c0392b; }
+    .agent-code { display:inline-block; background:#eaf2ff; color:#145da0; border:1px dashed #1976d2; border-radius:6px; padding:3px 7px; font-size:11px; font-weight:700; margin:2px 4px 2px 0; }
+    .agent-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px; }
+    .agent-stat { background:#faf7fb; border-radius:8px; padding:7px 5px; text-align:center; font-size:10px; color:#666; }
+    .agent-stat b { display:block; font-size:12px; color:var(--dark); margin-top:2px; }
+    @media (max-width:600px) { .agent-form-grid { grid-template-columns:1fr; } .agent-form-full { grid-column:auto; } }
 
     .product-batch-badge {
       position: absolute; top: 8px; right: 8px; z-index: 12;
@@ -523,6 +564,7 @@
         <button class="admin-tab" onclick="switchAdminTab('oTab', this)">Orders</button>
         <button class="admin-tab" onclick="switchAdminTab('offTab', this)">Offer Management</button>
         <button class="admin-tab" onclick="switchAdminTab('couponTab', this)">Coupon Management</button>
+        <button class="admin-tab" onclick="switchAdminTab('agentTab', this)">Shoukhin Agent</button>
         <button class="admin-tab" onclick="switchAdminTab('cashTab', this)">Cashbook</button>
         <button class="admin-tab" onclick="switchAdminTab('uTab', this)">Customer Data</button>
         <button class="admin-tab" onclick="switchAdminTab('sTab', this)">Website Settings</button>
@@ -537,7 +579,7 @@
           <input type="number" id="pBuyPrice" placeholder="Buying Price (BDT)" required>
           <input type="number" id="pPrice" placeholder="Regular Price (BDT)" required>
           <input type="number" id="pDiscountPrice" placeholder="Discount Price (BDT) (Optional)">
-          <input type="text" id="pDiscountTag" placeholder="Products Stock Discount Tag (e.g. 100৳ Discount)">
+          <input type="text" id="pDiscountTag" placeholder="Discount Tag is auto-calculated (e.g. 46% OFF)" readonly style="background:#f5f5f5; color:#777;">
           <input type="text" id="pColors" placeholder="Colors (Comma separated, e.g. Red, Blue)">
           <input type="text" id="pSizes" placeholder="Sizes (Comma separated, e.g. S, M, L, XL)">
           <input type="text" id="pOffer" placeholder="Offer Details (Optional, e.g. 10% OFF)">
@@ -699,7 +741,11 @@
               <label style="font-size:12px; font-weight:bold;">Min Order Amount (BDT) (Optional):</label>
               <input type="number" id="cMinOrder" placeholder="e.g. 500 (Optional)" min="0">
             </div>
-            <div style="grid-column: span 2;">
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Shoukhin Agent (Optional):</label>
+              <select id="cAgent"><option value="">-- General / No Agent --</option></select>
+            </div>
+            <div>
               <label style="font-size:12px; font-weight:bold;">Expiry Date & Time (Optional):</label>
               <input type="datetime-local" id="cExpiry">
             </div>
@@ -713,6 +759,7 @@
             <thead>
               <tr>
                 <th>Code</th>
+                <th>Agent</th>
                 <th>Discount</th>
                 <th>Min Order</th>
                 <th>Expiry</th>
@@ -725,6 +772,53 @@
             <tbody></tbody>
           </table>
         </div>
+      </div>
+
+
+      <!-- Shoukhin Agent Tab -->
+      <div id="agentTab" class="tab-content">
+        <h3><i class="fa-solid fa-user-tie"></i> Shoukhin Agent</h3>
+        <p style="font-size:12px; color:#777; margin:4px 0 14px;">Sales promotion agents, profiles and their assigned promo codes.</p>
+
+        <div class="agent-admin-card">
+          <h4 id="agentFormTitle">Add New Agent</h4>
+          <form id="agentForm" onsubmit="event.preventDefault(); saveAgent();" class="agent-form-grid" style="margin-top:10px;">
+            <input type="hidden" id="agentEditKey" value="">
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Agent Name:</label>
+              <input type="text" id="agentName" placeholder="Full name" required>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Phone:</label>
+              <input type="text" id="agentPhone" placeholder="01XXXXXXXXX">
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Assign Promo Code:</label>
+              <select id="agentCouponKey"><option value="">-- Select Coupon --</option></select>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Status:</label>
+              <select id="agentStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Profile Image URL (Optional):</label>
+              <input type="url" id="agentPhoto" placeholder="https://...">
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:bold;">Profile / Facebook Link (Optional):</label>
+              <input type="url" id="agentProfileLink" placeholder="https://...">
+            </div>
+            <div class="agent-form-full">
+              <label style="font-size:12px; font-weight:bold;">Note (Optional):</label>
+              <textarea id="agentNote" placeholder="Area, campaign or other notes" style="width:100%; min-height:62px; padding:8px; border:1px solid #ccc; border-radius:6px; resize:vertical;"></textarea>
+            </div>
+            <button type="submit" class="form-btn agent-form-full" style="background:var(--secondary);">Save Agent</button>
+            <button type="button" id="agentCancelBtn" class="form-btn agent-form-full" onclick="resetAgentForm()" style="display:none; background:#6c757d;">Cancel Edit</button>
+          </form>
+        </div>
+
+        <h4>Agent Profiles</h4>
+        <div id="agentProfileGrid" class="agent-profile-grid"></div>
       </div>
 
       <!-- Cashbook Tab -->
@@ -1083,7 +1177,7 @@
       <label style="font-size:12px; font-weight:bold;">Discount Price (BDT):</label>
       <input type="number" id="editPDiscountPrice" placeholder="Optional">
       <label style="font-size:12px; font-weight:bold;">Products Stock Discount Tag:</label>
-      <input type="text" id="editPDiscountTag" placeholder="e.g. 100৳ Discount">
+      <input type="text" id="editPDiscountTag" placeholder="Auto-calculated from Regular/Discount Price" readonly style="background:#f5f5f5; color:#777;">
       <label style="font-size:12px; font-weight:bold;">Colors (Comma separated):</label>
       <input type="text" id="editPColors">
       <label style="font-size:12px; font-weight:bold;">Sizes (Comma separated):</label>
@@ -1335,6 +1429,7 @@
     let notifications = [];
     let expenses = [];
     let coupons = [];
+    let agents = [];
     let appliedCoupon = null;
     let couponDiscount = 0;
     let adminPassword = "01518411872";
@@ -1619,6 +1714,16 @@
           const data = snapshot.val();
           coupons = data ? Object.values(data) : [];
           renderCouponTable();
+          renderAgentProfiles();
+          populateAgentSelectors();
+        });
+
+        window.onValue(window.ref(window.db, 'agents'), (snapshot) => {
+          const data = snapshot.val();
+          agents = data ? Object.values(data) : [];
+          renderAgentProfiles();
+          renderCouponTable();
+          populateAgentSelectors();
         });
 
         window.onValue(window.ref(window.db, 'special_offer_settings'), (snapshot) => {
@@ -2003,8 +2108,8 @@
 
       let discountTagHtml = '';
       if (!isSpecialOffer && hasDiscount) {
-        const discountAmount = p.price - p.discountPrice;
-        discountTagHtml = `<div class="discount-badge">${escapeHtml(p.discountTag || `${discountAmount}৳ Discount`)}</div>`;
+        const discountPercent = Math.max(1, Math.round(((Number(p.price) - Number(p.discountPrice)) / Number(p.price)) * 100));
+        discountTagHtml = `<div class="discount-badge" title="${discountPercent}% OFF"><span class="discount-percent">${discountPercent}%</span><span class="discount-off">OFF</span></div>`;
       }
       if (isSpecialOffer && p.offerDiscountTag) {
         discountTagHtml = `<div class="offer-discount-badge">${escapeHtml(p.offerDiscountTag)}</div>`;
@@ -2697,6 +2802,10 @@
         items: cart,
         subtotal: subtotal,
         couponCode: appliedCoupon ? appliedCoupon.code : 'N/A',
+        agentId: appliedCoupon && appliedCoupon.agentId ? appliedCoupon.agentId : null,
+        agentCommissionStatus: appliedCoupon && appliedCoupon.agentId ? 'pending' : 'none',
+        agentCommissionPending: 0,
+        agentCommissionEarned: 0,
         couponDiscount: couponDiscount,
         deliveryCharge: deliveryCharge,
         total: grandTotal,
@@ -3292,6 +3401,8 @@
       const value = Number(document.getElementById('cValue').value) || 0;
       const minOrder = Number(document.getElementById('cMinOrder').value) || 0;
       const expiry = document.getElementById('cExpiry').value;
+      const agentId = document.getElementById('cAgent') ? document.getElementById('cAgent').value : '';
+      const selectedAgent = agents.find(a => a.id === agentId);
 
       if(!code) return alert("Coupon code required!");
       if(value <= 0) return alert("Discount value must be greater than 0!");
@@ -3306,6 +3417,8 @@
         value: value,
         minOrder: minOrder,
         expiry: expiry,
+        agentId: agentId || null,
+        agentName: selectedAgent ? selectedAgent.name : '',
         usedCount: existing.usedCount || 0,
         totalSales: existing.totalSales || 0,
         totalDiscountGiven: existing.totalDiscountGiven || 0,
@@ -3326,6 +3439,7 @@
       document.getElementById('cValue').value = '';
       document.getElementById('cMinOrder').value = '';
       document.getElementById('cExpiry').value = '';
+      if(document.getElementById('cAgent')) document.getElementById('cAgent').value = '';
       document.getElementById('couponFormTitle').innerText = 'Add New Coupon';
     }
 
@@ -3339,6 +3453,7 @@
       document.getElementById('cValue').value = c.value;
       document.getElementById('cMinOrder').value = c.minOrder || '';
       document.getElementById('cExpiry').value = c.expiry || '';
+      if(document.getElementById('cAgent')) document.getElementById('cAgent').value = c.agentId || '';
       document.getElementById('couponFormTitle').innerText = 'Edit Coupon: ' + c.code;
     }
 
@@ -3356,7 +3471,7 @@
       tbody.innerHTML = '';
 
       if(coupons.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No coupons created yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888;">No coupons created yet.</td></tr>';
         return;
       }
 
@@ -3368,6 +3483,7 @@
         tbody.innerHTML += `
           <tr>
             <td><b style="color:var(--primary);">${c.code}</b></td>
+            <td>${c.agentId ? `<span style="font-weight:600;">${escapeHtml(c.agentName || (agents.find(a => a.id === c.agentId)?.name || 'Agent'))}</span>` : '<span style="color:#999;">General</span>'}</td>
             <td>${discountText}</td>
             <td>${minOrderText}</td>
             <td>${expiryText}</td>
@@ -3381,6 +3497,126 @@
           </tr>
         `;
       });
+    }
+
+
+    /* ================= Shoukhin Agent Management ================= */
+    function escapeAttr(value) {
+      return escapeHtml(String(value || '')).replace(/`/g, '&#96;');
+    }
+
+    function populateAgentSelectors() {
+      const couponSelect = document.getElementById('agentCouponKey');
+      if (couponSelect) {
+        const current = couponSelect.value;
+        couponSelect.innerHTML = '<option value="">-- Select Coupon --</option>' + coupons.map(c => `<option value="${escapeAttr(c.key)}">${escapeHtml(c.code)}</option>`).join('');
+        if (current && coupons.some(c => c.key === current)) couponSelect.value = current;
+      }
+
+      const agentSelect = document.getElementById('cAgent');
+      if (agentSelect) {
+        const current = agentSelect.value;
+        agentSelect.innerHTML = '<option value="">-- General / No Agent --</option>' + agents.map(a => `<option value="${escapeAttr(a.id)}">${escapeHtml(a.name)}${a.phone ? ' - ' + escapeHtml(a.phone) : ''}</option>`).join('');
+        if (current && agents.some(a => a.id === current)) agentSelect.value = current;
+      }
+    }
+
+    function saveAgent() {
+      const editKey = document.getElementById('agentEditKey').value;
+      const name = document.getElementById('agentName').value.trim();
+      const phone = document.getElementById('agentPhone').value.trim();
+      const couponKey = document.getElementById('agentCouponKey').value;
+      const status = document.getElementById('agentStatus').value || 'active';
+      const photo = document.getElementById('agentPhoto').value.trim();
+      const profileLink = document.getElementById('agentProfileLink').value.trim();
+      const note = document.getElementById('agentNote').value.trim();
+      if (!name) return alert('Agent name required!');
+
+      const id = editKey || ('AGENT-' + Date.now());
+      const existing = agents.find(a => a.id === id) || {};
+      const data = { id, name, phone, status, photo, profileLink, note, createdAt: existing.createdAt || Date.now(), updatedAt: Date.now() };
+      if (!window.db) return;
+
+      window.set(window.ref(window.db, 'agents/' + id), data);
+      coupons.filter(c => c.agentId === id).forEach(c => {
+        window.update(window.ref(window.db, 'coupons/' + c.key), { agentName: name });
+      });
+      if (couponKey) {
+        window.update(window.ref(window.db, 'coupons/' + couponKey), { agentId: id, agentName: name });
+      }
+      alert('Agent saved successfully!');
+      resetAgentForm();
+    }
+
+    function editAgent(id) {
+      const a = agents.find(x => x.id === id);
+      if (!a) return;
+      document.getElementById('agentEditKey').value = a.id;
+      document.getElementById('agentName').value = a.name || '';
+      document.getElementById('agentPhone').value = a.phone || '';
+      document.getElementById('agentStatus').value = a.status || 'active';
+      document.getElementById('agentPhoto').value = a.photo || '';
+      document.getElementById('agentProfileLink').value = a.profileLink || '';
+      document.getElementById('agentNote').value = a.note || '';
+      const linked = coupons.find(c => c.agentId === a.id);
+      document.getElementById('agentCouponKey').value = linked ? linked.key : '';
+      document.getElementById('agentFormTitle').innerText = 'Edit Agent: ' + (a.name || '');
+      document.getElementById('agentCancelBtn').style.display = 'block';
+      if (typeof goToAdminTab === 'function') {
+        goToAdminTab('agentTab');
+      } else {
+        const agentTabBtn = Array.from(document.querySelectorAll('.admin-tab')).find(b => (b.getAttribute('onclick') || '').includes("'agentTab'"));
+        if (agentTabBtn) switchAdminTab('agentTab', agentTabBtn);
+      }
+      document.getElementById('agentFormTitle').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function resetAgentForm() {
+      const f = document.getElementById('agentForm');
+      if (f) f.reset();
+      const key = document.getElementById('agentEditKey');
+      if (key) key.value = '';
+      const title = document.getElementById('agentFormTitle');
+      if (title) title.innerText = 'Add New Agent';
+      const btn = document.getElementById('agentCancelBtn');
+      if (btn) btn.style.display = 'none';
+      populateAgentSelectors();
+    }
+
+    function deleteAgent(id) {
+      const a = agents.find(x => x.id === id);
+      if (!a || !confirm('Delete agent ' + a.name + '?')) return;
+      if (!window.db) return;
+      coupons.filter(c => c.agentId === id).forEach(c => window.update(window.ref(window.db, 'coupons/' + c.key), { agentId: null, agentName: null }));
+      window.remove(window.ref(window.db, 'agents/' + id));
+    }
+
+    function renderAgentProfiles() {
+      const grid = document.getElementById('agentProfileGrid');
+      if (!grid) return;
+      populateAgentSelectors();
+      if (!agents.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888; padding:22px; background:#fff; border-radius:12px;">No Shoukhin Agent added yet.</div>';
+        return;
+      }
+      grid.innerHTML = agents.map(a => {
+        const linkedCoupons = coupons.filter(c => c.agentId === a.id);
+        const uses = linkedCoupons.reduce((s,c) => s + (Number(c.usedCount)||0), 0);
+        const sales = linkedCoupons.reduce((s,c) => s + (Number(c.totalSales)||0), 0);
+        const discount = linkedCoupons.reduce((s,c) => s + (Number(c.totalDiscountGiven)||0), 0);
+        const initials = (a.name || 'A').split(/\s+/).filter(Boolean).slice(0,2).map(x => x[0]).join('').toUpperCase();
+        const avatar = a.photo ? `<img class="agent-avatar" src="${escapeAttr(a.photo)}" alt="${escapeAttr(a.name)}">` : `<div class="agent-avatar">${escapeHtml(initials)}</div>`;
+        const codes = linkedCoupons.length ? linkedCoupons.map(c => `<span class="agent-code">${escapeHtml(c.code)}</span>`).join('') : '<span style="font-size:11px;color:#999;">No promo code assigned</span>';
+        const link = a.profileLink ? `<a href="${escapeAttr(a.profileLink)}" target="_blank" rel="noopener" style="font-size:11px;">Open Profile</a>` : '';
+        return `<div class="agent-profile-card">
+          <div class="agent-profile-head">${avatar}<div><div class="agent-name">${escapeHtml(a.name || '')}</div><span class="agent-status ${a.status === 'inactive' ? 'inactive' : 'active'}">${a.status === 'inactive' ? 'Inactive' : 'Active'}</span></div></div>
+          <div style="font-size:12px; line-height:1.7;"><i class="fa-solid fa-phone"></i> ${escapeHtml(a.phone || 'No phone')} ${link ? '<br>' + link : ''}</div>
+          <div style="margin-top:7px;">${codes}</div>
+          ${a.note ? `<div style="font-size:11px;color:#777;margin-top:7px;">${escapeHtml(a.note)}</div>` : ''}
+          <div class="agent-stats"><div class="agent-stat">Uses<b>${uses}</b></div><div class="agent-stat">Sales<b>${sales}৳</b></div><div class="agent-stat">Discount<b>${discount}৳</b></div></div>
+          <div style="display:flex; gap:6px; margin-top:10px;"><button onclick="editAgent('${escapeAttr(a.id)}')" style="flex:1;background:#007bff;color:#fff;border:0;padding:6px;border-radius:5px;cursor:pointer;">Edit</button><button onclick="deleteAgent('${escapeAttr(a.id)}')" style="flex:1;background:#dc3545;color:#fff;border:0;padding:6px;border-radius:5px;cursor:pointer;">Delete</button></div>
+        </div>`;
+      }).join('');
     }
 
     function populateOfferSelect() {
