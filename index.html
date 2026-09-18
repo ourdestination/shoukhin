@@ -367,6 +367,40 @@
     .footer-section { flex: 1; min-width: 220px; }
     .counter-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; display: inline-block; margin-top: 10px; }
 
+    /* ===== App-style bottom navigation bar (mobile only) ===== */
+    .bottom-app-nav {
+      display: none;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 2500;
+      background: var(--light);
+      box-shadow: 0 -4px 18px rgba(0,0,0,0.12);
+      border-radius: 18px 18px 0 0;
+      padding: 6px 2px calc(6px + env(safe-area-inset-bottom, 0px)) 2px;
+    }
+    .bottom-app-nav-inner { display: flex; align-items: stretch; justify-content: space-around; }
+    .bottom-nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; padding: 6px 2px; background: none; border: none; color: #9aa0a6; font-family: 'Poppins', sans-serif;
+      font-size: 0.65rem; font-weight: 600; cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s, transform 0.15s;
+    }
+    .bottom-nav-item i { font-size: 1.15rem; transition: transform 0.15s; }
+    .bottom-nav-item:active { transform: scale(0.92); }
+    .bottom-nav-item.active { color: var(--primary); }
+    .bottom-nav-item.active i { transform: translateY(-1px); }
+    .bottom-nav-item .nav-item-badge {
+      position: absolute; top: 0px; right: 22%; background: red; color: white; border-radius: 50%;
+      min-width: 16px; height: 16px; font-size: 9.5px; display: none; align-items: center; justify-content: center;
+      padding: 0 3px; box-shadow: 0 0 0 2px var(--light);
+    }
+    .bottom-nav-cart-wrap { position: relative; }
+    .bottom-nav-fab {
+      width: 46px; height: 46px; border-radius: 50%; margin-top: -22px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary)); color: #fff;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 14px rgba(233,30,99,0.4);
+      font-size: 1.25rem;
+    }
+    .bottom-nav-fab-label { margin-top: 4px; }
+
     @media (max-width: 600px) {
       header { padding: 10px 3%; }
       #siteTitle { font-size: 0.95rem; }
@@ -388,6 +422,14 @@
       .offer-banner { padding: 12px 10px 14px; border-radius: 14px; }
       .offer-banner-title { font-size: 1rem; }
       .floating-btn { width: 42px; height: 42px; font-size: 19px; }
+
+      /* App-shell feel: hide the desktop-style Cart/Track/App buttons from the
+         header (they move to the bottom nav) and give the page room at the
+         bottom so content isn't hidden behind the bar. */
+      .nav-btns button#cartBtn, .nav-btns button[onclick*="trackModal"], .nav-btns button#apkDownloadBtn { display: none; }
+      body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+      .bottom-app-nav { display: block; }
+      .floating-social { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
     }
   </style>
 </head>
@@ -1078,6 +1120,32 @@
     </div>
   </div>
 
+  <!-- App-style "Menu" sheet, opened from the bottom nav on mobile -->
+  <div id="appMenuModal" class="modal">
+    <div class="modal-content" style="max-width:340px;">
+      <span class="close-btn" onclick="closeModal('appMenuModal')">&times;</span>
+      <h3 style="margin-bottom:14px;">Menu</h3>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="form-btn" id="menuNotifBtn" style="display:none; background:var(--secondary); margin-top:0;" onclick="closeModal('appMenuModal'); openNotifModal();">
+          <i class="fa-solid fa-bell"></i> Notifications
+        </button>
+        <button class="form-btn" id="menuApkBtn" style="display:none; background:#17a2b8; margin-top:0;" onclick="closeModal('appMenuModal'); openModal('apkPopupModal');">
+          <i class="fa-solid fa-mobile-screen-button"></i> Download App
+        </button>
+        <button class="form-btn" style="background:#6f42c1; margin-top:0;" onclick="closeModal('appMenuModal'); openModal('productRequestModal');">
+          <i class="fa-solid fa-comment-medical"></i> Request a Product
+        </button>
+        <button class="form-btn" style="background:var(--dark); margin-top:0;" onclick="closeModal('appMenuModal'); openAdminCheck();">
+          <i class="fa-solid fa-user-shield"></i> Admin Panel
+        </button>
+        <div style="text-align:left; font-size:0.82rem; color:#666; margin-top:6px; border-top:1px solid #eee; padding-top:10px;">
+          <p><i class="fa-solid fa-location-dot"></i> House No. 12, Gourgopal Angina Road, Kotwali, Faridpur-7800.</p>
+          <p style="margin-top:4px;"><i class="fa-solid fa-phone"></i> +880 1345 409887</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Website Entry Welcome Popup (5 sec) -->
   <div id="welcomePopupModal" class="modal">
     <div class="modal-content">
@@ -1127,6 +1195,29 @@
       <i class="fa-brands fa-facebook-f"></i>
     </a>
   </div>
+
+  <!-- App-style bottom navigation (mobile only) -->
+  <nav class="bottom-app-nav" id="bottomAppNav">
+    <div class="bottom-app-nav-inner">
+      <button class="bottom-nav-item active" data-nav="home" onclick="navGoHome()">
+        <i class="fa-solid fa-house"></i><span>Home</span>
+      </button>
+      <button class="bottom-nav-item" data-nav="categories" onclick="navGoCategories()">
+        <i class="fa-solid fa-layer-group"></i><span>Category</span>
+      </button>
+      <button class="bottom-nav-item bottom-nav-cart-wrap" data-nav="cart" onclick="navOpenCart()">
+        <div class="bottom-nav-fab"><i class="fa-solid fa-cart-shopping"></i></div>
+        <span class="bottom-nav-fab-label">Cart</span>
+        <span id="navCartCount" class="nav-item-badge">0</span>
+      </button>
+      <button class="bottom-nav-item" data-nav="track" onclick="navOpenTrack()">
+        <i class="fa-solid fa-truck-fast"></i><span>Track</span>
+      </button>
+      <button class="bottom-nav-item" data-nav="menu" onclick="navOpenMenu()">
+        <i class="fa-solid fa-bars"></i><span>Menu</span>
+      </button>
+    </div>
+  </nav>
 
   <footer>
     <div class="footer-content">
@@ -1584,11 +1675,50 @@
       }
     }
 
+    // ===== App-style bottom nav wiring =====
+    function setActiveBottomNav(key) {
+      document.querySelectorAll('.bottom-nav-item').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-nav') === key);
+      });
+    }
+    function navGoHome() {
+      setActiveBottomNav('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function navGoCategories() {
+      setActiveBottomNav('categories');
+      const el = document.getElementById('categoryGrid');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function navOpenCart() {
+      setActiveBottomNav('cart');
+      openModal('cartModal');
+    }
+    function navOpenTrack() {
+      setActiveBottomNav('track');
+      openModal('trackModal');
+    }
+    function navOpenMenu() {
+      setActiveBottomNav('menu');
+      // Mirror the header's Notification/App-download buttons into the menu sheet,
+      // since those buttons are hidden on mobile in favor of the bottom nav.
+      const headerNotif = document.getElementById('notifBtn');
+      const headerApk = document.getElementById('apkDownloadBtn');
+      const menuNotif = document.getElementById('menuNotifBtn');
+      const menuApk = document.getElementById('menuApkBtn');
+      if (menuNotif) menuNotif.style.display = (headerNotif && headerNotif.style.display !== 'none') ? 'block' : 'none';
+      if (menuApk) menuApk.style.display = (headerApk && headerApk.style.display !== 'none') ? 'block' : 'none';
+      openModal('appMenuModal');
+    }
+
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { 
       document.getElementById(id).style.display = 'none'; 
       if(id === 'imagePreviewModal' && imgPopupTimer) {
         clearInterval(imgPopupTimer);
+      }
+      if (id === 'cartModal' || id === 'trackModal' || id === 'appMenuModal') {
+        setActiveBottomNav('home');
       }
     }
 
@@ -2213,7 +2343,13 @@
     }
 
     function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+      const cartQty = cart.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById('cartCount').innerText = cartQty;
+      const navBadge = document.getElementById('navCartCount');
+      if (navBadge) {
+        navBadge.innerText = cartQty;
+        navBadge.style.display = cartQty > 0 ? 'flex' : 'none';
+      }
       const container = document.getElementById('cartItems');
       container.innerHTML = '';
       let subtotal = 0;
