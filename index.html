@@ -118,6 +118,19 @@
     @keyframes cartPulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     .cart-animate { animation: cartPulse 0.4s ease-in-out; }
 
+    .fireworks-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 99999; overflow: hidden;
+    }
+    .firework-particle {
+      position: absolute; top: 0; left: 0; width: 7px; height: 7px; border-radius: 50%;
+      animation: fireworkBurst 0.9s ease-out forwards;
+      box-shadow: 0 0 6px 1px currentColor;
+    }
+    @keyframes fireworkBurst {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+    }
+
     .flying-item {
       position: fixed; z-index: 9999; border-radius: 50%; object-fit: cover;
       pointer-events: none; transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -127,9 +140,64 @@
       text-align: center; padding: 25px 15px; background: rgba(255,255,255,0.6);
       backdrop-filter: blur(5px); margin: 15px; border-radius: 15px; animation: fadeIn 1s ease-in;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: visible;
     }
-    .hero-logo-img { width: 100%; max-width: 720px; aspect-ratio: 4 / 1; height: auto; border-radius: 12px; object-fit: cover; border: none; cursor: pointer; }
-    .hero h1 { font-family: 'Poppins', sans-serif; font-size: 2rem; color: var(--primary); margin-bottom: 2px; font-weight: 700; }
+    .hero-logo-img { display: none; width: 100%; max-width: 720px; aspect-ratio: 4 / 1; height: auto; border-radius: 12px; object-fit: cover; border: none; cursor: pointer; }
+    .hero h1 { margin-bottom: 2px; line-height: 1.3; }
+    .brand-main {
+      display: block; font-family: 'Great Vibes', cursive; font-size: 3.4rem; font-weight: 400;
+      line-height: 1.35; padding-top: 10px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      color: var(--primary); text-shadow: 2px 2px 10px rgba(233,30,99,0.18);
+    }
+    .brand-sub {
+      display: block; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600;
+      font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: var(--secondary);
+      margin-top: -6px;
+    }
+    .brand-sub::before, .brand-sub::after {
+      content: ''; display: inline-block; width: 18px; height: 1px; background: var(--secondary);
+      vertical-align: middle; margin: 0 8px 3px;
+    }
+
+    .welcome-hang {
+      position: absolute; top: -8px; right: 10%; transform-origin: top center;
+      display: flex; flex-direction: column; align-items: center; z-index: 6;
+      animation: pendulumSwing 3.2s ease-in-out infinite;
+    }
+    .welcome-pin {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #a1887f, #4e342e);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .welcome-thread {
+      width: 1.5px; height: 26px;
+      background: linear-gradient(to bottom, #b08968, #6d4c30);
+      box-shadow: 0 0 2px rgba(0,0,0,0.15);
+    }
+    .welcome-drop {
+      width: 6px; height: 9px; margin: -1px 0 1px;
+      background: linear-gradient(var(--secondary), var(--primary));
+      border-radius: 50% 50% 50% 0; transform: rotate(45deg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .welcome-card {
+      position: relative; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; padding: 7px 20px; font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 0.78rem; letter-spacing: 0.5px; white-space: nowrap;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+      border-radius: 999px;
+    }
+    @keyframes pendulumSwing {
+      0%, 100% { transform: rotate(-9deg); }
+      50% { transform: rotate(9deg); }
+    }
+    @media (max-width: 600px) {
+      .welcome-hang { right: 6%; top: -6px; }
+      .welcome-thread { height: 20px; }
+      .welcome-card { font-size: 0.68rem; padding: 6px 16px; }
+    }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -170,9 +238,19 @@
     .product-card:hover .product-img { transform: scale(1.05); }
     .product-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
     
-    .product-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
-    .variant-details { font-size: 0.75rem; color: #666; margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
-    .variant-tag { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; border: 1px solid #e0e0e0; }
+    .product-title {
+      font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; text-overflow: ellipsis; max-height: calc(1.3em * 2);
+    }
+    .variant-details {
+      font-size: 0.75rem; color: #666; margin-bottom: 6px; display: flex;
+      flex-wrap: nowrap; gap: 4px; overflow: hidden; white-space: nowrap;
+    }
+    .variant-tag {
+      background: #f0f0f0; padding: 2px 6px; border-radius: 4px; border: 1px solid #e0e0e0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex-shrink: 1;
+    }
 
     .offer-ribbon {
       position: absolute; top: 10px; left: -35px; transform: rotate(-45deg);
@@ -318,7 +396,33 @@
     }
     .btn-add:hover { background: var(--secondary); }
     .btn-add:disabled { background: #ccc; cursor: not-allowed; }
-    .btn-add:active { transform: scale(0.95); }
+    .btn-add:active, .btn-order-now:active { transform: scale(0.95); }
+    .product-action-row {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+.btn-add, .btn-order-now { font-size: 12px; white-space: nowrap; padding-left: 8px; padding-right: 8px; }
+    .product-action-row .btn-add,
+    .product-action-row .btn-order-now {
+      flex: 1;
+      width: auto;
+      margin-top: 0;
+      min-width: 0;
+    }
+    .btn-order-now {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.1s ease, background 0.3s;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .btn-order-now:hover { background: #218838; }
+    .btn-order-now:disabled { background: #ccc; cursor: not-allowed; }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2600; justify-content: center; align-items: center; }
     .modal-content { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -473,7 +577,9 @@
       .logo-img { width: 35px; height: 35px; }
       .nav-btns button { padding: 5px 8px; font-size: 0.75rem; }
       .hero { margin: 10px 5px; padding: 18px 10px; }
-      .hero h1 { font-size: 1.5rem; }
+      .brand-main { font-size: 2.3rem; }
+      .brand-sub { font-size: 0.68rem; letter-spacing: 2.5px; }
+      .brand-sub::before, .brand-sub::after { width: 12px; margin: 0 5px 2px; }
       .hero-logo-img { width: 100%; max-width: 100%; aspect-ratio: 4 / 1; height: auto; }
       .container { padding: 10px 3%; }
       .category-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -484,7 +590,8 @@
       .product-info { padding: 8px; }
       .product-title { font-size: 0.82rem; }
       .price { font-size: 0.95rem; }
-      .btn-add { padding: 6px; font-size: 0.78rem; }
+      .btn-add, .btn-order-now { padding: 6px 4px; font-size: 0.72rem; }
+      .product-action-row { gap: 5px; }
       .offer-banner { padding: 12px 10px 14px; border-radius: 14px; }
       .offer-banner-title { font-size: 1rem; }
       .floating-btn { width: 42px; height: 42px; font-size: 19px; }
@@ -497,9 +604,36 @@
       .bottom-app-nav { display: block; }
       .floating-social { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
     }
-  </style>
+  
+/* Compact Cart + Order buttons */
+.product-action-row {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
+.product-action-row .btn-add,
+.product-action-row .btn-order-now {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px !important;
+  line-height: 1;
+  white-space: nowrap !important;
+  padding: 7px 5px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.product-action-row .btn-add i,
+.product-action-row .btn-order-now i {
+  font-size: 11px !important;
+  flex-shrink: 0;
+}
+
+</style>
 </head>
 <body>
+  <div id="fireworksOverlay" class="fireworks-overlay"></div>
 
   <header>
     <div class="logo-container">
@@ -523,7 +657,13 @@
 
   <div class="hero">
     <img id="heroSiteLogo" src="https://via.placeholder.com/100?text=Logo" alt="Logo" class="hero-logo-img" onclick="showFullImage(this.src)">
-    <h1>Shoukhin Online Shop</h1>
+    <h1><span class="brand-main">Shoukhin</span><span class="brand-sub">Online Shop</span></h1>
+    <div class="welcome-hang">
+      <div class="welcome-pin"></div>
+      <div class="welcome-thread"></div>
+      <div class="welcome-drop"></div>
+      <div class="welcome-card">Welcome!</div>
+    </div>
     <span id="siteCodeHero" class="site-code-hero"></span>
   </div>
 
@@ -1018,7 +1158,7 @@
               <div id="pdStockMsg" style="font-size:0.78rem; color:#dc3545; margin:5px 0 0;"></div>
 
               <div class="pd-action-row">
-                <button class="form-btn" id="pdAddToCartBtn" onclick="addToCartFromDetail()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                <button class="form-btn" id="pdAddToCartBtn" onclick="addToCartFromDetail()"><i class="fa-solid fa-cart-plus"></i> Cart</button>
                 <button class="form-btn" style="background:#495057;" onclick="viewCartFromDetail()"><i class="fa-solid fa-cart-shopping"></i> View Cart</button>
               </div>
               <button class="form-btn" style="background:#25D366; margin-top:8px;" onclick="orderViaWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Order via WhatsApp</button>
@@ -1119,12 +1259,17 @@
         <h4>Checkout Details</h4>
 
         <input type="text" id="checkoutName" placeholder="Your Full Name *" required>
-        <input type="tel" id="checkoutPhone" placeholder="Phone Number *" required>
+        <input type="tel" id="checkoutPhone" placeholder="Phone Number *" required inputmode="numeric" autocomplete="tel" maxlength="11" pattern="01(3|4|5|6|9)[0-9]{8}" title="Phone number must start with 013, 014, 015, 016, or 019 and contain exactly 11 digits.">
         
         <label style="font-size: 13px; font-weight: bold; margin-top: 5px; display: block;">Select District (জেলা): *</label>
         <select id="checkoutDistrict" onchange="calculateDeliveryCharge()" required>
           <option value="">Select District</option>
         </select>
+
+<select id="checkoutUpazila" required>
+  <option value="">Select Upazila *</option>
+</select>
+
 
         <input type="text" id="checkoutAddress" placeholder="Full Address (ঠিকানা) *" required>
 
@@ -2126,7 +2271,7 @@
       }
 
       return `
-        <div class="product-card">
+        <div class="product-card" onclick="if(window.launchFireworkBurst) window.launchFireworkBurst();">
           ${(p.offer && isOfferActive(p)) ? `<div class="offer-ribbon">${escapeHtml(p.offer)}</div>` : ''}
           ${discountTagHtml}
           ${batchBadgeHtml}
@@ -2138,9 +2283,14 @@
               ${hasDiscount ? `<span class="old-price">${p.price} ৳</span>${p.discountPrice} ৳` : `${p.price} ৳`}
             </div>
             ${isOut ? `<div class="out-of-stock-badge">Out of Stock</div>` : ''}
-            <button class="btn-add" onclick="directAddToCart('${p.id}', event)" ${isOut ? 'disabled' : ''}>
-              ${isOut ? 'Out of Stock' : 'Add to Cart'}
-            </button>
+            <div class="product-action-row">
+              <button class="btn-add" onclick="directAddToCart('${p.id}', event)" ${isOut ? 'disabled' : ''}>
+                ${isOut ? 'Out of Stock' : '<i class="fa-solid fa-cart-plus"></i> Cart'}
+              </button>
+              <button class="btn-order-now" onclick="directOrderNow('${p.id}', event)" ${isOut ? 'disabled' : ''}>
+                ${isOut ? 'Out of Stock' : '<i class="fa-solid fa-bag-shopping"></i> Order'}
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -2318,7 +2468,7 @@
       const isOut = !currentDetailProduct || (currentDetailProduct.stock || 0) <= 0;
       const addBtn = document.getElementById('pdAddToCartBtn');
       addBtn.disabled = isOut;
-      addBtn.innerHTML = isOut ? 'Out of Stock' : '<i class="fa-solid fa-cart-plus"></i> Add to Cart';
+      addBtn.innerHTML = isOut ? 'Out of Stock' : '<i class="fa-solid fa-cart-plus"></i> Cart';
     }
 
     function addToCartFromDetail() {
@@ -2467,6 +2617,16 @@
       document.getElementById('pdRatingRow').innerHTML = `${renderStarsHtml(stats.avg)} <span>${stats.avg.toFixed(1)} (${stats.count} review${stats.count > 1 ? 's' : ''})</span>`;
 
       alert('Thank you for your review!');
+    }
+
+    function directOrderNow(pId, event) {
+      const item = products.find(p => p.id === pId);
+      if (!item || item.stock <= 0) return;
+
+      // Add this product to the cart, then open the existing checkout/cart form
+      // so the customer can enter name, phone, address and payment details.
+      directAddToCart(pId, event);
+      openModal('cartModal');
     }
 
     function directAddToCart(pId, event) {
@@ -2769,7 +2929,96 @@
       closeModal('productRequestModal');
     }
 
-    function checkout() {
+    
+// District -> Upazila dependent dropdown
+const upazilaData = {
+  "Bagerhat": ["Bagerhat Sadar","Chitalmari","Fakirhat","Kachua","Mollahat","Mongla","Morrelganj","Rampal","Mongla"],
+  "Bandarban": ["Ali Kadam","Bandarban Sadar","Lama","Naikhongchhari","Rowangchhari","Ruma","Thanchi"],
+  "Barguna": ["Amtali","Bamna","Barguna Sadar","Betagi","Patharghata","Taltali"],
+  "Barishal": ["Agailjhara","Babuganj","Bakerganj","Banaripara","Barishal Sadar","Gaurnadi","Hizla","Mehendiganj","Muladi","Wazirpur"],
+  "Bhola": ["Bhola Sadar","Borhanuddin","Char Fasson","Daulatkhan","Lalmohan","Manpura","Tazumuddin"],
+  "Bogura": ["Adamdighi","Bogura Sadar","Dhunat","Dhupchanchia","Gabtali","Kahaloo","Nandigram","Sariakandi","Shajahanpur","Sherpur","Shibganj","Sonatala"],
+  "Brahmanbaria": ["Akhaura","Ashuganj","Bancharampur","Brahmanbaria Sadar","Kasba","Nabinagar","Nasirnagar","Sarail","Bijoynagar"],
+  "Chandpur": ["Chandpur Sadar","Faridganj","Haimchar","Hajiganj","Kachua","Matlab Dakshin","Matlab Uttar","Shahrasti"],
+  "Chattogram": ["Anwara","Banshkhali","Boalkhali","Chandanaish","Fatikchhari","Hathazari","Lohagara","Mirsharai","Patiya","Rangunia","Raozan","Sandwip","Satkania","Sitakunda"],
+  "Chuadanga": ["Alamdanga","Chuadanga Sadar","Damurhuda","Jibannagar"],
+  "Cumilla": ["Barura","Brahmanpara","Burichong","Chandina","Chauddagram","Cumilla Adarsha Sadar","Cumilla Sadar Dakshin","Daudkandi","Debidwar","Homna","Laksam","Lalmai","Meghna","Monoharganj","Muradnagar","Nangalkot","Titas"],
+  "Cox's Bazar": ["Chakaria","Cox's Bazar Sadar","Eidgaon","Kutubdia","Maheshkhali","Pekua","Ramu","Teknaf","Ukhia"],
+  "Dhaka": ["Dhamrai","Dohar","Keraniganj","Nawabganj","Savar"],
+  "Dinajpur": ["Birampur","Birganj","Birganj?"],
+  "Faridpur": ["Alfadanga","Bhanga","Boalmari","Charbhadrasan","Faridpur Sadar","Madhukhali","Nagarkanda","Sadarpur","Saltha"],
+  "Feni": ["Chhagalnaiya","Daganbhuiyan","Feni Sadar","Fulgazi","Parshuram","Sonagazi"],
+  "Gaibandha": ["Fulchhari","Gaibandha Sadar","Gobindaganj","Palashbari","Sadullapur","Saghata","Sundarganj"],
+  "Gazipur": ["Gazipur Sadar","Kaliakair","Kaliganj","Kapasia","Sreepur"],
+  "Gopalganj": ["Gopalganj Sadar","Kashiani","Kotalipara","Muksudpur","Tungipara"],
+  "Habiganj": ["Ajmiriganj","Bahubal","Baniachong","Chunarughat","Habiganj Sadar","Lakhai","Madhabpur","Nabiganj","Shayestaganj"],
+  "Jamalpur": ["Baksiganj","Dewanganj","Islampur","Jamalpur Sadar","Madarganj","Melandaha","Sarishabari"],
+  "Jashore": ["Abhaynagar","Bagherpara","Chaugachha","Jashore Sadar","Jhikargachha","Keshabpur","Manirampur","Sharsha"],
+  "Jhalokati": ["Jhalokati Sadar","Kathalia","Nalchity","Rajapur"],
+  "Jhenaidah": ["Harinakunda","Jhenaidah Sadar","Kaliganj","Kotchandpur","Maheshpur","Shailkupa"],
+  "Joypurhat": ["Akkelpur","Joypurhat Sadar","Kalai","Khetlal","Panchbibi"],
+  "Khagrachhari": ["Dighinala","Guimara","Khagrachhari Sadar","Lakshmichhari","Mahalchhari","Manikchhari","Matiranga","Panchhari","Ramgarh"],
+  "Khulna": ["Batiaghata","Dacope","Dumuria","Dighalia","Koyra","Paikgachha","Phultala","Rupsa","Terokhada"],
+  "Kishoreganj": ["Austagram","Bajitpur","Bhairab","Hossainpur","Itna","Karimganj","Katiadi","Kishoreganj Sadar","Kuliarchar","Mithamain","Nikli","Pakundia","Tarail"],
+  "Kurigram": ["Bhurungamari","Char Rajibpur","Chilmari","Kurigram Sadar","Nageshwari","Phulbari","Rajarhat","Raomari","Ulipur"],
+  "Kushtia": ["Bheramara","Daulatpur","Khoksa","Kumarkhali","Kushtia Sadar","Mirpur"],
+  "Lakshmipur": ["Kamalnagar","Lakshmipur Sadar","Raipur","Ramganj","Ramgati"],
+  "Lalmonirhat": ["Aditmari","Hatibandha","Kaliganj","Lalmonirhat Sadar","Patgram"],
+  "Madaripur": ["Dasar","Kalkini","Madaripur Sadar","Rajoir","Shibchar"],
+  "Magura": ["Magura Sadar","Mohammadpur","Shalikha","Sreepur"],
+  "Manikganj": ["Daulatpur","Ghior","Harirampur","Manikganj Sadar","Saturia","Shibalaya","Singair"],
+  "Meherpur": ["Gangni","Meherpur Sadar","Mujibnagar"],
+  "Moulvibazar": ["Barlekha","Juri","Kamalganj","Kulaura","Moulvibazar Sadar","Rajnagar","Sreemangal"],
+  "Munshiganj": ["Gazaria","Lohajang","Munshiganj Sadar","Sirajdikhan","Sreenagar","Tongibari"],
+  "Mymensingh": ["Bhaluka","Dhobaura","Fulbaria","Gaffargaon","Gauripur","Haluaghat","Ishwarganj","Mymensingh Sadar","Muktagachha","Nandail","Phulpur","Tarakanda","Trishal"],
+  "Naogaon": ["Atrai","Badalgachhi","Dhamoirhat","Manda","Mahadebpur","Naogaon Sadar","Niamatpur","Patnitala","Porsha","Raninagar","Sapahar"],
+  "Narail": ["Kalia","Lohagara","Narail Sadar"],
+  "Narayanganj": ["Araihazar","Bandar","Narayanganj Sadar","Rupganj","Sonargaon"],
+  "Narsingdi": ["Belabo","Monohardi","Narsingdi Sadar","Palash","Raipura","Shibpur"],
+  "Natore": ["Bagatipara","Baraigram","Gurudaspur","Lalpur","Natore Sadar","Singra"],
+  "Netrokona": ["Atpara","Barhatta","Durgapur","Kalmakanda","Kendua","Khaliajuri","Madan","Mohanganj","Netrokona Sadar","Purbadhala"],
+  "Nilphamari": ["Dimla","Domar","Jaldhaka","Kishoreganj","Nilphamari Sadar","Saidpur"],
+  "Noakhali": ["Begumganj","Chatkhil","Companiganj","Hatiya","Kabirhat","Senbagh","Sonaimuri","Subarnachar","Noakhali Sadar"],
+  "Pabna": ["Atgharia","Bera","Bhangura","Chatmohar","Faridpur","Ishwardi","Pabna Sadar","Santhia","Sujanagar"],
+  "Panchagarh": ["Atwari","Boda","Debiganj","Panchagarh Sadar","Tetulia"],
+  "Patuakhali": ["Bauphal","Dashmina","Dumki","Galachipa","Kalapara","Mirzaganj","Patuakhali Sadar","Rangabali"],
+  "Pirojpur": ["Bhandaria","Indurkani","Kawkhali","Mathbaria","Nazirpur","Nesarabad","Pirojpur Sadar"],
+  "Rajbari": ["Baliakandi","Goalanda","Kalukhali","Pangsha","Rajbari Sadar"],
+  "Rajshahi": ["Bagha","Bagmara","Charghat","Durgapur","Godagari","Mohanpur","Paba","Puthia","Tanore"],
+  "Rangamati": ["Baghaichhari","Barkal","Belaichhari","Juraichhari","Kaptai","Langadu","Naniarchar","Rajasthali","Rangamati Sadar"],
+  "Rangpur": ["Badarganj","Gangachara","Kaunia","Mithapukur","Pirgachha","Pirganj","Rangpur Sadar","Taraganj"],
+  "Satkhira": ["Assasuni","Debhata","Kalaroa","Kaliganj","Satkhira Sadar","Shyamnagar","Tala"],
+  "Shariatpur": ["Bhedarganj","Damudya","Gosairhat","Naria","Shariatpur Sadar","Zajira"],
+  "Sherpur": ["Jhenaigati","Nakla","Nalitabari","Sherpur Sadar","Sreebardi"],
+  "Sirajganj": ["Belkuchi","Chauhali","Kamarkhanda","Kazipur","Raiganj","Shahjadpur","Sirajganj Sadar","Tarash","Ullapara"],
+  "Sunamganj": ["Bishwambharpur","Chhatak","Dakshin Sunamganj","Derai","Dharampasha","Dowarabazar","Jagannathpur","Jamalganj","Shalla","Shantiganj","Sunamganj Sadar","Tahirpur"],
+  "Sylhet": ["Balaganj","Beanibazar","Bishwanath","Companiganj","Fenchuganj","Golapganj","Gowainghat","Jaintiapur","Kanaighat","Osmani Nagar","Sylhet Sadar","Zakiganj"],
+  "Tangail": ["Basail","Bhuapur","Delduar","Dhanbari","Ghatail","Gopalpur","Kalihati","Madhupur","Mirzapur","Nagarpur","Sakhipur","Tangail Sadar"],
+  "Thakurgaon": ["Baliadangi","Haripur","Pirganj","Ranisankail","Thakurgaon Sadar"]
+};
+
+const checkoutDistrictEl = document.getElementById('checkoutDistrict');
+const checkoutUpazilaEl = document.getElementById('checkoutUpazila');
+
+function updateCheckoutUpazilas() {
+  const district = checkoutDistrictEl ? checkoutDistrictEl.value : '';
+  if (!checkoutUpazilaEl) return;
+  checkoutUpazilaEl.innerHTML = '<option value="">Select Upazila *</option>';
+  (upazilaData[district] || []).forEach(upazila => {
+    const option = document.createElement('option');
+    option.value = upazila;
+    option.textContent = upazila;
+    checkoutUpazilaEl.appendChild(option);
+  });
+  checkoutUpazilaEl.disabled = !(upazilaData[district] && upazilaData[district].length);
+}
+
+if (checkoutDistrictEl) {
+  checkoutDistrictEl.addEventListener('change', updateCheckoutUpazilas);
+  updateCheckoutUpazilas();
+}
+
+function checkout() {
       if(cart.length === 0) return alert('Your cart is empty!');
 
       const name = document.getElementById('checkoutName').value.trim();
@@ -2782,6 +3031,11 @@
 
       if(!name || !phone || !district || !address) {
         return alert('Please fill in all required fields.');
+      }
+
+      // Bangladesh mobile number validation: exactly 11 digits and starts with 013/014/015/016/019
+      if(!/^(013|014|015|016|019)\\d{8}$/.test(phone)) {
+        return alert('সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন। নম্বরটি 013, 014, 015, 016 অথবা 019 দিয়ে শুরু হতে হবে।');
       }
 
       if(payMethod === 'Online' && (!payNumber || !payAmount)) {
@@ -2799,6 +3053,7 @@
         userName: name,
         address: fullAddress,
         district: district,
+       upazila: upazila,
         items: cart,
         subtotal: subtotal,
         couponCode: appliedCoupon ? appliedCoupon.code : 'N/A',
@@ -4416,6 +4671,51 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
     });
   } catch(e) { console.warn('FCM registration failed',e); }
 })();
+</script>
+<script>
+  // ওয়েবসাইটে ঢোকার সময় ৬ সেকেন্ডের জন্য বাজি ফোটার মতো (fireworks) এন্ট্রি অ্যানিমেশন
+  (function () {
+    const colors = ['#e91e63', '#9c27b0', '#ff4081', '#ffd700', '#00e5ff', '#7cfc00', '#ff5722'];
+
+    function launchBurst() {
+      const overlay = document.getElementById('fireworksOverlay');
+      if (!overlay) return;
+      const originX = Math.random() * window.innerWidth;
+      const originY = Math.random() * (window.innerHeight * 0.55) + 20;
+      const particleCount = 26;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'firework-particle';
+        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.3;
+        const distance = 60 + Math.random() * 70;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        particle.style.left = originX + 'px';
+        particle.style.top = originY + 'px';
+        particle.style.background = color;
+        particle.style.color = color;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+
+        overlay.appendChild(particle);
+        particle.addEventListener('animationend', () => particle.remove());
+      }
+    }
+
+    window.launchFireworkBurst = launchBurst;
+
+    window.addEventListener('load', function () {
+      launchBurst();
+      const burstTimer = setInterval(launchBurst, 550);
+
+      setTimeout(function () {
+        clearInterval(burstTimer);
+      }, 6000);
+    });
+  })();
 </script>
 </body>
 </html>
