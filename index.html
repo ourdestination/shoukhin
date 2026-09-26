@@ -137,12 +137,12 @@
     }
 
     .hero {
-      text-align: center; padding: 25px 15px; background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(5px); margin: 15px; border-radius: 15px; animation: fadeIn 1s ease-in;
+      text-align: center; padding: 25px 16px; background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(5px); margin: 15px 4%; border-radius: 15px; animation: fadeIn 1s ease-in;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
       position: relative; overflow: visible;
     }
-    .hero-logo-img { display: none; width: 100%; max-width: 720px; aspect-ratio: 4 / 1; height: auto; border-radius: 12px; object-fit: cover; border: none; cursor: pointer; }
+    .hero-logo-img { display: none; width: 100%; max-width: 100%; height: auto; border-radius: 12px; object-fit: cover; border: none; cursor: pointer; }
     .hero h1 { margin-bottom: 2px; line-height: 1.3; }
     .brand-main {
       display: block; font-family: 'Great Vibes', cursive; font-size: 3.4rem; font-weight: 400;
@@ -576,11 +576,11 @@
       #siteTitle { font-size: 0.95rem; }
       .logo-img { width: 35px; height: 35px; }
       .nav-btns button { padding: 5px 8px; font-size: 0.75rem; }
-      .hero { margin: 10px 5px; padding: 18px 10px; }
+      .hero { margin: 10px 3%; padding: 18px 10px; }
       .brand-main { font-size: 2.3rem; }
       .brand-sub { font-size: 0.68rem; letter-spacing: 2.5px; }
       .brand-sub::before, .brand-sub::after { width: 12px; margin: 0 5px 2px; }
-      .hero-logo-img { width: 100%; max-width: 100%; aspect-ratio: 4 / 1; height: auto; }
+      .hero-logo-img { width: 100%; max-width: 100%; height: auto; }
       .container { padding: 10px 3%; }
       .category-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
       .category-card { padding: 0 0 6px 0; }
@@ -656,14 +656,7 @@
   </header>
 
   <div class="hero">
-    <img id="heroSiteLogo" src="https://via.placeholder.com/100?text=Logo" alt="Logo" class="hero-logo-img" onclick="showFullImage(this.src)">
-    <h1><span class="brand-main">Shoukhin</span><span class="brand-sub">Online Shop</span></h1>
-    <div class="welcome-hang">
-      <div class="welcome-pin"></div>
-      <div class="welcome-thread"></div>
-      <div class="welcome-drop"></div>
-      <div class="welcome-card">Welcome!</div>
-    </div>
+    <img id="heroSiteLogo" src="Up.png" alt="Shoukhin Online Shop" class="hero-logo-img" style="display:block;" onclick="showFullImage(this.src)">
     <span id="siteCodeHero" class="site-code-hero"></span>
   </div>
 
@@ -671,7 +664,7 @@
 
     <!-- Special Offers Section -->
     <div id="offerSectionContainer" class="offer-banner">
-      <div class="offer-banner-title"><i class="fa-solid fa-fire"></i> Special Offer and Combo Packs !!!</div>
+      <img src="down.png" alt="Order to Delivery - Special Offer and Combo Packs" style="width:100%; max-width:100%; height:auto; border-radius:14px; display:block; margin-bottom:10px;">
       <div id="offerCustomerMessage" class="offer-customer-message" style="display:none;"></div>
       <div id="offerProductGrid" class="grid"></div>
       <div id="comboOfferList" style="margin-top:15px;"></div>
