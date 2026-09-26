@@ -292,17 +292,8 @@
     .combo-tabs-content { position: relative; }
 
     .offer-banner {
-      display: none; margin-bottom: 25px; padding: 16px 16px 18px;
-      background: linear-gradient(120deg, #fff0f5 0%, #fce4ec 45%, #f3e5f5 100%);
-      border-radius: 18px; border: 1px solid rgba(233,30,99,0.18);
-      box-shadow: 0 8px 24px rgba(233,30,99,0.1); position: relative; overflow: hidden;
+      display: none; margin-bottom: 25px; position: relative;
     }
-    .offer-banner::before {
-      content: ""; position: absolute; top: -50%; left: -20%; width: 60%; height: 200%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.35), transparent);
-      transform: rotate(15deg); animation: offerShine 6s ease-in-out infinite;
-    }
-    @keyframes offerShine { 0% { left: -30%; } 50% { left: 120%; } 100% { left: 120%; } }
     .offer-banner-title {
       display: flex; align-items: center; gap: 8px; font-size: 1.15rem; font-weight: 700;
       color: var(--primary); margin-bottom: 10px; position: relative; z-index: 1;
@@ -592,7 +583,6 @@
       .price { font-size: 0.95rem; }
       .btn-add, .btn-order-now { padding: 6px 4px; font-size: 0.72rem; }
       .product-action-row { gap: 5px; }
-      .offer-banner { padding: 12px 10px 14px; border-radius: 14px; }
       .offer-banner-title { font-size: 1rem; }
       .floating-btn { width: 42px; height: 42px; font-size: 19px; }
 
@@ -664,7 +654,6 @@
 
     <!-- Special Offers Section -->
     <div id="offerSectionContainer" class="offer-banner">
-      <img src="down.png" alt="Order to Delivery - Special Offer and Combo Packs" style="width:100%; max-width:100%; height:auto; border-radius:14px; display:block; margin-bottom:10px;">
       <div id="offerCustomerMessage" class="offer-customer-message" style="display:none;"></div>
       <div id="offerProductGrid" class="grid"></div>
       <div id="comboOfferList" style="margin-top:15px;"></div>
