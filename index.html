@@ -43,7 +43,12 @@
     <!-- Font Awesome CSS loaded non-render-blocking (preload + swap) so it doesn't delay first paint -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600;700&display=swap">
+    <!-- Google Fonts no longer blocks first paint (media=print swap trick); text shows in fallback font meanwhile -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;600;700&display=swap"></noscript>
+    <!-- Start downloading the Firebase modules right away instead of when the script is reached -->
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js">
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js">
     <!-- html2canvas removed from here: it's only used for the admin "download memo/invoice image"
          button, so it's now lazy-loaded on demand from downloadMemoImage() instead of blocking
          every visitor's initial page load with ~200KB of unused JS. -->
@@ -230,6 +235,7 @@
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
     .product-card {
+      content-visibility: auto; contain-intrinsic-size: auto 340px;
       background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.06);
       transition: 0.3s; display: flex; flex-direction: column; position: relative;
     }
@@ -1498,7 +1504,7 @@
   <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update, remove, push, onDisconnect } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove, push, onDisconnect, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDdlwyradz1KD4-Mu5vWT47Zp-ysuqRM1A",
@@ -1522,13 +1528,21 @@
     window.remove = remove;
     window.push = push;
     window.onDisconnect = onDisconnect;
+    window.get = get;
+    window.query = query;
+    window.orderByChild = orderByChild;
+    window.equalTo = equalTo;
 
     // Analytics isn't needed to show products/cart/checkout, so it's fetched
     // separately after the DB connection is already set up — it no longer
     // delays the product list from appearing.
-    import("https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js")
+    const loadAnalytics = () => import("https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js")
       .then(({ getAnalytics }) => getAnalytics(app))
       .catch(() => {});
+    window.addEventListener('load', () => {
+      if ('requestIdleCallback' in window) requestIdleCallback(loadAnalytics, { timeout: 4000 });
+      else setTimeout(loadAnalytics, 2500);
+    });
   </script>
 
   <script>
@@ -1692,11 +1706,34 @@
 
         const reader = new FileReader();
         reader.onload = function(evt) {
-          images.push(evt.target.result);
-          loaded++;
-          if (loaded === fileList.length) callback(images);
+          compressImageDataUrl(evt.target.result, 800, 0.8).then(out => {
+            images.push(out);
+            loaded++;
+            if (loaded === fileList.length) callback(images);
+          });
         };
         reader.readAsDataURL(file);
+      });
+    }
+
+    // Downscale to max 800px and re-encode as WebP (falls back to the original if that isn't smaller).
+    function compressImageDataUrl(dataUrl, maxSide, quality) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+            const w = Math.max(1, Math.round(img.width * scale));
+            const h = Math.max(1, Math.round(img.height * scale));
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const out = canvas.toDataURL('image/webp', quality);
+            resolve(out.startsWith('data:image/webp') && out.length < dataUrl.length ? out : dataUrl);
+          } catch (e) { resolve(dataUrl); }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
       });
     }
 
@@ -1784,7 +1821,44 @@
       });
     }
 
+    // Admin tables (stock/offers/combos) contain every product image again as base64 in the DOM.
+    // Building them for ordinary visitors was pure wasted work, so they only run for the admin.
+    function isAdminSession() { return sessionStorage.getItem('isAdminLoggedIn') === 'true'; }
+    function runAdminProductRenders() {
+      renderStockTable();
+      populateOfferSelect();
+      renderOfferTable();
+      populateComboProductSelect();
+      renderComboOfferTable();
+      cleanupExpiredBadges(products);
+    }
+
+    // ---- Instant repeat visits: show last-known products/categories immediately,
+    //      then Firebase refreshes them live. Silent no-op if storage is full/blocked. ----
+    const SHOP_CACHE_KEY = 'shopCache_v1';
+    let _cacheTimer = null;
+    function saveShopCache() {
+      clearTimeout(_cacheTimer);
+      _cacheTimer = setTimeout(() => {
+        try {
+          localStorage.setItem(SHOP_CACHE_KEY, JSON.stringify({ products, categories }));
+        } catch (e) { try { localStorage.removeItem(SHOP_CACHE_KEY); } catch (e2) {} }
+      }, 1500);
+    }
+    function loadShopCache() {
+      try {
+        const raw = localStorage.getItem(SHOP_CACHE_KEY);
+        if (!raw) return;
+        const c = JSON.parse(raw);
+        if (Array.isArray(c.products) && c.products.length) products = c.products;
+        if (Array.isArray(c.categories) && c.categories.length) categories = c.categories;
+        renderCategories();
+        renderProducts();
+      } catch (e) {}
+    }
+
     function initApp() {
+      loadShopCache();
       if(window.db){
         window.onValue(window.ref(window.db, 'products'), (snapshot) => {
           const data = snapshot.val();
@@ -1796,10 +1870,8 @@
           });
           renderCategories();
           renderProducts();
-          renderStockTable();
-          populateOfferSelect();
-          renderOfferTable();
-          cleanupExpiredBadges(products);
+          if (isAdminSession()) runAdminProductRenders();
+          saveShopCache();
         });
 
         window.onValue(window.ref(window.db, 'categories'), (snapshot) => {
@@ -1809,48 +1881,7 @@
           }
           renderCategories();
           renderProducts();
-        });
-
-        window.onValue(window.ref(window.db, 'orders'), (snapshot) => {
-          const data = snapshot.val();
-          const newOrders = data ? Object.values(data) : [];
-          
-          if (previousOrderCount !== -1 && newOrders.length > previousOrderCount) {
-            playNotificationSound();
-          }
-          previousOrderCount = newOrders.length;
-          
-          orders = newOrders;
-          renderOrders();
-          renderCashbook();
-        });
-
-        window.onValue(window.ref(window.db, 'customer_history'), (snapshot) => {
-          const data = snapshot.val();
-          customerDataHistory = data || {};
-          renderCustomerData();
-        });
-
-        window.onValue(window.ref(window.db, 'notifications'), (snapshot) => {
-          const data = snapshot.val();
-          notifications = data ? Object.entries(data).map(([key, val]) => ({ notifKey: key, ...val })) : [];
-          renderNotificationsUI();
-        });
-
-        window.onValue(window.ref(window.db, 'coupons'), (snapshot) => {
-          const data = snapshot.val();
-          coupons = data ? Object.values(data) : [];
-          renderCouponTable();
-          renderAgentProfiles();
-          populateAgentSelectors();
-        });
-
-        window.onValue(window.ref(window.db, 'agents'), (snapshot) => {
-          const data = snapshot.val();
-          agents = data ? Object.values(data) : [];
-          renderAgentProfiles();
-          renderCouponTable();
-          populateAgentSelectors();
+          saveShopCache();
         });
 
         window.onValue(window.ref(window.db, 'special_offer_settings'), (snapshot) => {
@@ -1864,16 +1895,8 @@
         window.onValue(window.ref(window.db, 'combo_offers'), (snapshot) => {
           const data = snapshot.val();
           comboOffers = data ? Object.values(data) : [];
-          populateComboProductSelect();
-          renderComboOfferTable();
+          if (isAdminSession()) { populateComboProductSelect(); renderComboOfferTable(); }
           renderProducts();
-        });
-
-        window.onValue(window.ref(window.db, 'expenses'), (snapshot) => {
-          const data = snapshot.val();
-          expenses = data ? Object.values(data) : [];
-          renderExpenses();
-          renderCashbook();
         });
 
         window.onValue(window.ref(window.db, 'settings'), (snapshot) => {
@@ -1947,6 +1970,66 @@
           }
         });
       }
+    }
+
+
+    // Admin-only data (orders, customer history, notifications, coupons, agents, expenses).
+    // Previously every visitor downloaded ALL of this on page load, which is the main
+    // reason the site was slow (and it exposed private data). Now it only loads after
+    // the admin logs in, and only once.
+    let adminListenersStarted = false;
+    function initAdminListeners() {
+      if (adminListenersStarted || !window.db) return;
+      adminListenersStarted = true;
+        window.onValue(window.ref(window.db, 'orders'), (snapshot) => {
+          const data = snapshot.val();
+          const newOrders = data ? Object.values(data) : [];
+          
+          if (previousOrderCount !== -1 && newOrders.length > previousOrderCount) {
+            playNotificationSound();
+          }
+          previousOrderCount = newOrders.length;
+          
+          orders = newOrders;
+          renderOrders();
+          renderCashbook();
+        });
+
+        window.onValue(window.ref(window.db, 'customer_history'), (snapshot) => {
+          const data = snapshot.val();
+          customerDataHistory = data || {};
+          renderCustomerData();
+        });
+
+        window.onValue(window.ref(window.db, 'notifications'), (snapshot) => {
+          const data = snapshot.val();
+          notifications = data ? Object.entries(data).map(([key, val]) => ({ notifKey: key, ...val })) : [];
+          renderNotificationsUI();
+        });
+
+        window.onValue(window.ref(window.db, 'coupons'), (snapshot) => {
+          const data = snapshot.val();
+          coupons = data ? Object.values(data) : [];
+          renderCouponTable();
+          renderAgentProfiles();
+          populateAgentSelectors();
+        });
+
+        window.onValue(window.ref(window.db, 'agents'), (snapshot) => {
+          const data = snapshot.val();
+          agents = data ? Object.values(data) : [];
+          renderAgentProfiles();
+          renderCouponTable();
+          populateAgentSelectors();
+        });
+
+        window.onValue(window.ref(window.db, 'expenses'), (snapshot) => {
+          const data = snapshot.val();
+          expenses = data ? Object.values(data) : [];
+          renderExpenses();
+          renderCashbook();
+        });
+
     }
 
     // ===== App-style bottom nav wiring =====
@@ -2031,7 +2114,14 @@
       });
     }
 
+    let _renderCategoriesQueued = false;
     function renderCategories() {
+      if (_renderCategoriesQueued) return;
+      _renderCategoriesQueued = true;
+      requestAnimationFrame(() => { _renderCategoriesQueued = false; renderCategoriesNow(); });
+    }
+
+    function renderCategoriesNow() {
       const catContainer = document.getElementById('categoryGrid');
       const pCatSelect = document.getElementById('pCategory');
       const stockCatSelect = document.getElementById('stockCatFilter');
@@ -2164,7 +2254,14 @@
       renderProducts();
     }
 
+    let _renderProductsQueued = false;
     function renderProducts() {
+      if (_renderProductsQueued) return;
+      _renderProductsQueued = true;
+      requestAnimationFrame(() => { _renderProductsQueued = false; renderProductsNow(); });
+    }
+
+    function renderProductsNow() {
       const grid = document.getElementById('productGrid');
       const offerGrid = document.getElementById('offerProductGrid');
       const offerContainer = document.getElementById('offerSectionContainer');
@@ -2188,9 +2285,7 @@
           msgEl.style.display = 'none';
         }
 
-        offerProducts.forEach(p => {
-          offerGrid.innerHTML += createProductCardHTML(p, true);
-        });
+        offerGrid.innerHTML = offerProducts.map(p => createProductCardHTML(p, true)).join('');
         renderComboOffers();
       } else {
         offerContainer.style.display = 'none';
@@ -2202,11 +2297,9 @@
         return;
       }
 
-      filtered.forEach((p, idx) => {
-        // First 4 cards are likely above-the-fold on first render, so load them eagerly
-        // with high priority instead of lazily, to speed up the visible grid.
-        grid.innerHTML += createProductCardHTML(p, false, idx < 4);
-      });
+      // First 4 cards are above-the-fold: eager + high priority. Build the HTML once
+      // (innerHTML += in a loop re-parsed the whole grid for every product).
+      grid.innerHTML = filtered.map((p, idx) => createProductCardHTML(p, false, idx < 4)).join('');
     }
 
     function escapeHtml(text) {
@@ -2257,7 +2350,7 @@
           ${(p.offer && isOfferActive(p)) ? `<div class="offer-ribbon">${escapeHtml(p.offer)}</div>` : ''}
           ${discountTagHtml}
           ${batchBadgeHtml}
-          <img src="${mainImg}" class="product-img" id="img-${p.id}" alt="${p.name}" ${priorityImg ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} onclick="openProductDetail('${p.id}')">
+          <img src="${mainImg}" class="product-img" id="img-${p.id}" alt="${p.name}" ${priorityImg ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async" onclick="openProductDetail('${p.id}')">
           <div class="product-info">
             <h4 class="product-title">${p.name}</h4>
             ${variantHtml}
@@ -2727,7 +2820,7 @@
     }
 
     /* Coupon Application Logic */
-    function applyCoupon() {
+    async function applyCoupon() {
       const codeInput = document.getElementById('cartCouponInput').value.trim().toUpperCase();
       const msgElem = document.getElementById('couponMsg');
 
@@ -2742,6 +2835,16 @@
         msgElem.style.color = "red";
         msgElem.innerText = "Cart is empty!";
         return;
+      }
+
+      if (!coupons.length && window.db && window.get) {
+        msgElem.style.color = "#777";
+        msgElem.innerText = "Checking coupon...";
+        try {
+          const snap = await window.get(window.ref(window.db, 'coupons'));
+          const cdata = snap.val();
+          coupons = cdata ? Object.values(cdata) : [];
+        } catch (e) { coupons = []; }
       }
 
       const matchedCoupon = coupons.find(c => c.code === codeInput);
@@ -3127,13 +3230,23 @@ function checkout() {
       window.set(historyRef, existing);
     }
 
-    function trackOrder() {
+    async function trackOrder() {
       const phone = document.getElementById('trackPhoneInput').value.trim();
       const container = document.getElementById('trackResults');
       
       if (!phone) return alert('Please enter a phone number.');
 
-      const userOrders = orders.filter(o => o.userPhone === phone);
+      container.innerHTML = '<p style="margin-top:10px;color:#777;">Searching...</p>';
+      let userOrders = [];
+      try {
+        const q = window.query(window.ref(window.db, 'orders'), window.orderByChild('userPhone'), window.equalTo(phone));
+        const snap = await window.get(q);
+        const odata = snap.val();
+        userOrders = odata ? Object.values(odata) : [];
+      } catch (e) {
+        container.innerHTML = '<p style="color:red; margin-top:10px;">Could not load orders. Please try again.</p>';
+        return;
+      }
 
       if (userOrders.length === 0) {
         container.innerHTML = `<p style="color:red; margin-top:10px;">No orders found for: <b>${phone}</b></p>`;
@@ -3172,6 +3285,8 @@ function checkout() {
       const p = document.getElementById('adminPassInput').value;
       if(p === adminPassword) {
         sessionStorage.setItem('isAdminLoggedIn', 'true');
+        initAdminListeners();
+        runAdminProductRenders();
         closeModal('adminLoginModal');
         document.getElementById('adminPanel').style.display = 'block';
         document.getElementById('notifBtn').style.display = 'inline-block';
