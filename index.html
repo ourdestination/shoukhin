@@ -679,7 +679,7 @@
       <div class="flip-group">
         <div class="flip-digits">
           <div class="flip-card" id="s0"><span>0</span></div>
-          <div class="flip-card" id="s1"><span>5</span></div>
+          <div class="flip-card" id="s1"><span>3</span></div>
         </div>
         <div class="flip-label">Seconds</div>
       </div>
@@ -4880,12 +4880,12 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
   })();
 </script>
 <script>
-  // Splash flip-clock countdown: 05.000 -> 00.000 (seconds + milliseconds), then reveal the site
+  // Splash flip-clock countdown: 03.000 -> 00.000 (seconds + milliseconds), then reveal the site
   (function () {
-    var TOTAL = 5000;
+    var TOTAL = 3000;
     var ids = ['s0','s1','m0','m1','m2'];
     var els = ids.map(function (i) { return document.getElementById(i); });
-    var last = ['0','5','0','0','0'];
+    var last = ['0','3','0','0','0'];
     var splash = document.getElementById('welcomeSplash');
     document.body.style.overflow = 'hidden';
     var start = performance.now();
