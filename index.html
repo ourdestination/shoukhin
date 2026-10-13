@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-     <meta property="og:site_name" content="Shoukhin Online Shop">
+     <meta property="og:site_name" content="Labonya Prohor Online Shop">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
     <!-- ১. গুগলের সাইট ভেরিফিকেশন (Google Search Console Meta Tag) -->
     <meta name="google-site-verification" content="_bsL6kIRe7tdq27dLFcKlwGIkeTn710kqgzrSnn7B0o" />
 
     <!-- ২. টাইটেল (Title Tag) -->
-    <title>Shoukhin - Online Shop | Best Ecommerce Store</title>
+    <title>Labonya Prohor - Online Shop | Best Ecommerce Store</title>
 
     <!-- ৩. মেটা ডেসক্রিপশন (Meta Description) -->
-    <meta name="description" content="Welcome to Shoukhin Online Shop. Browse our wide range of products at the best prices with fast delivery.">
+    <meta name="description" content="Welcome to Labonya Prohor Online Shop. Browse our wide range of products at the best prices with fast delivery.">
 
     <!-- ৪. মেটা কিওয়ার্ডস (Meta Keywords) -->
-    <meta name="keywords" content="Shoukhin, Shoukhin, Shoukhin online shop, online shopping, ecommerce store">
+    <meta name="keywords" content="Labonya Prohor, Labonya Prohor, Labonya Prohor online shop, online shopping, ecommerce store">
 
     <!-- ৫. রোবট ইনডেক্স নির্দেশিকা (Robots Meta Tag) -->
     <meta name="robots" content="index, follow">
@@ -30,8 +30,8 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Shoukhin",
-      "alternateName": ["Shoukhin Online Shop"],
+      "name": "Labonya Prohor",
+      "alternateName": ["Labonya Prohor Online Shop"],
       "url": "https://ourdestination.github.io/shoukhin/"
     }
     </script>
@@ -54,6 +54,17 @@
          every visitor's initial page load with ~200KB of unused JS. -->
 
   <style>
+    #welcomeSplash { overflow: hidden; }
+
+    /* square logo (no animation on the logo itself) + rings spreading around it, like the Note Jar app opening screen */
+    .lp-logo-wrap { position: relative; width: 130px; height: 130px; margin: 0 auto; }
+    .lp-logo-wrap::before, .lp-logo-wrap::after { content: ""; position: absolute; inset: 0; border-radius: 28px; border: 2px solid #e91e63; opacity: 0; animation: lpRing 1.8s ease-out .3s infinite; }
+    .lp-logo-wrap::after { animation-delay: 1.2s; }
+    .lp-logo-wrap img { position: relative; z-index: 1; width: 130px; height: 130px; border-radius: 28px; object-fit: cover; background: #fff; display: block; border: 0; animation: none; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+    @keyframes lpRing { 0% { opacity: .55; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
+    #welcomeSplash .lp-logo-wrap { margin-bottom: 14px; }
+    #welcomeSplash .ws-name { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 9vw, 2.8rem); font-weight: 800; letter-spacing: .5px; line-height: 1.1;
+      background: linear-gradient(45deg, #e91e63, #9c27b0, #ff4081); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     /* Welcome splash screen */
     #welcomeSplash {
       position: fixed; inset: 0; z-index: 100000;
@@ -63,11 +74,7 @@
       transition: opacity 0.5s ease, visibility 0.5s ease;
     }
     #welcomeSplash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-    #welcomeSplash .ws-title {
-      font-size: 1.8rem; font-weight: 700; line-height: 1.3;
-      background: linear-gradient(45deg, #e91e63, #9c27b0, #ff4081);
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    #welcomeSplash .ws-title { font-size: 1.1rem; font-weight: 400; line-height: 1.4; color: #2c3e50; }
     #welcomeSplash .ws-loading { font-size: 1.05rem; font-weight: 600; color: #2c3e50; }
     .flip-row { display: flex; align-items: flex-start; justify-content: center; gap: clamp(14px, 4vw, 34px); margin-top: 6px; }
     .flip-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -116,6 +123,12 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
     }
     .logo-container { display: flex; align-items: center; gap: 10px; }
+    /* header logo: rings spreading around it */
+    .lp-head-wrap { position: relative; width: 42px; height: 42px; flex: none; }
+    .lp-head-wrap::before, .lp-head-wrap::after { content: ""; position: absolute; inset: 0; border-radius: 10px; border: 2px solid #fff; opacity: 0; pointer-events: none; animation: lpRing 1.8s ease-out .3s infinite; }
+    .lp-head-wrap::after { animation-delay: 1.2s; }
+    .lp-head-wrap .logo-img { position: relative; z-index: 1; width: 42px; height: 42px; border-radius: 10px; display: block; }
+    @media (max-width: 600px) { .lp-head-wrap, .lp-head-wrap .logo-img { width: 35px; height: 35px; } }
     .logo-img { width: 42px; height: 42px; border-radius: 0; object-fit: cover; border: none; cursor: pointer; }
     
     #siteTitle { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
@@ -383,7 +396,7 @@
     .discount-badge .discount-percent { display:inline-block; font-size:9px; line-height:1; white-space:nowrap; }
     .discount-badge .discount-off { display:inline-block; font-size:9px; line-height:1; margin-left:3px; white-space:nowrap; }
 
-    /* Shoukhin Agent / Promo Code management */
+    /* Labonya Prohor Agent / Promo Code management */
     .agent-admin-card {
       background:#fff; border:1px solid #ead7ef; border-radius:12px; padding:14px;
       box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:14px;
@@ -673,7 +686,11 @@
 </head>
 <body>
   <div id="welcomeSplash">
-    <div class="ws-title">Welcome to Shoukhin Online Shop</div>
+    <div class="lp-logo-wrap">
+      <img id="wsLogo" alt="Labonya Prohor" src="https://ourdestination.github.io/shoukhin/favicon.png">
+    </div>
+    <div class="ws-name">Labonya Prohor</div>
+    <div class="ws-title">Welcome to Labonya Prohor Online Shop</div>
     <div class="ws-loading">Loading ... Please wait</div>
     <div class="flip-row">
       <div class="flip-group">
@@ -698,9 +715,11 @@
 
   <header>
     <div class="logo-container">
+      <div class="lp-head-wrap">
       <img id="siteLogo" src="https://via.placeholder.com/50?text=Logo" alt="Logo" class="logo-img" fetchpriority="high" onclick="showFullImage(this.src)">
+      </div>
       <div>
-        <h2 id="siteTitle">Shoukhin</h2>
+        <h2 id="siteTitle">Labonya Prohor</h2>
         <span id="siteCodeHeader" class="site-code-header"></span>
         <div class="live-visitor-badge-header"><i class="fa-solid fa-user"></i> <b id="liveVisitorCount">0</b></div>
       </div>
@@ -717,7 +736,7 @@
   </header>
 
   <div class="hero">
-    <img id="heroSiteLogo" src="Up.png" alt="Shoukhin Online Shop" class="hero-logo-img" style="display:block;" onclick="showFullImage(this.src)">
+    <img id="heroSiteLogo" src="Up.png" alt="Labonya Prohor Online Shop" class="hero-logo-img" style="display:block;" onclick="showFullImage(this.src)">
     <span id="siteCodeHero" class="site-code-hero"></span>
   </div>
 
@@ -757,7 +776,7 @@
         <button class="admin-tab" onclick="switchAdminTab('oTab', this)">Orders</button>
         <button class="admin-tab" onclick="switchAdminTab('offTab', this)">Offer Management</button>
         <button class="admin-tab" onclick="switchAdminTab('couponTab', this)">Coupon Management</button>
-        <button class="admin-tab" onclick="switchAdminTab('agentTab', this)">Shoukhin Agent</button>
+        <button class="admin-tab" onclick="switchAdminTab('agentTab', this)">Labonya Prohor Agent</button>
         <button class="admin-tab" onclick="switchAdminTab('cashTab', this)">Cashbook</button>
         <button class="admin-tab" onclick="switchAdminTab('uTab', this)">Customer Data</button>
         <button class="admin-tab" onclick="switchAdminTab('sTab', this)">Website Settings</button>
@@ -935,7 +954,7 @@
               <input type="number" id="cMinOrder" placeholder="e.g. 500 (Optional)" min="0">
             </div>
             <div>
-              <label style="font-size:12px; font-weight:bold;">Shoukhin Agent (Optional):</label>
+              <label style="font-size:12px; font-weight:bold;">Labonya Prohor Agent (Optional):</label>
               <select id="cAgent"><option value="">-- General / No Agent --</option></select>
             </div>
             <div>
@@ -968,9 +987,9 @@
       </div>
 
 
-      <!-- Shoukhin Agent Tab -->
+      <!-- Labonya Prohor Agent Tab -->
       <div id="agentTab" class="tab-content">
-        <h3><i class="fa-solid fa-user-tie"></i> Shoukhin Agent</h3>
+        <h3><i class="fa-solid fa-user-tie"></i> Labonya Prohor Agent</h3>
         <p style="font-size:12px; color:#777; margin:4px 0 14px;">Sales promotion agents, profiles and their assigned promo codes.</p>
 
         <div class="agent-admin-card">
@@ -1065,7 +1084,7 @@
 
           <hr style="margin: 20px 0;">
           <h4>Home Photo Update</h4>
-          <label style="font-size: 13px; margin-top: 5px; display: block;">"Shoukhin Online Shop" লেখার উপরের হোম ইমেজ পরিবর্তন করুন (Max: 200KB):</label>
+          <label style="font-size: 13px; margin-top: 5px; display: block;">"Labonya Prohor Online Shop" লেখার উপরের হোম ইমেজ পরিবর্তন করুন (Max: 200KB):</label>
           <input type="file" id="settingHomePhotoFile" accept="image/*">
           <button onclick="updateHomePhoto()" class="form-btn" style="background:#6f42c1;">Upload & Update Home Photo</button>
 
@@ -1312,7 +1331,7 @@
         <h4>Checkout Details</h4>
 
         <input type="text" id="checkoutName" placeholder="Your Full Name *" required>
-        <input type="tel" id="checkoutPhone" placeholder="Phone Number *" required inputmode="numeric" autocomplete="tel" maxlength="11" pattern="01(3|4|5|6|9)[0-9]{8}" title="Phone number must start with 013, 014, 015, 016, or 019 and contain exactly 11 digits.">
+        <input type="tel" id="checkoutPhone" placeholder="Phone Number *" required inputmode="numeric" autocomplete="tel" maxlength="11" pattern="01[3-9][0-9]{8}" title="Phone number must start with 013 to 019 and contain exactly 11 digits.">
         
         <label style="font-size: 13px; font-weight: bold; margin-top: 5px; display: block;">Select District (জেলা): *</label>
         <select id="checkoutDistrict" onchange="calculateDeliveryCharge()" required>
@@ -1499,7 +1518,7 @@
       <div id="printableMemo">
         <div style="text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px;">
           <img id="memoShopLogo" src="" alt="Logo" style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 5px; display: inline-block;">
-          <h2 style="font-family: 'Poppins', sans-serif; color: var(--primary);">Shoukhin Online Shop</h2>
+          <h2 style="font-family: 'Poppins', sans-serif; color: var(--primary);">Labonya Prohor Online Shop</h2>
           <p>House No. 12, Gourgopal Angina Road, Kotwali, Faridpur-7800.</p>
           <p>Phone: +880 1345 409887</p>
           <h4>Cash Memo / Invoice</h4>
@@ -1550,7 +1569,7 @@
   <footer>
     <div class="footer-content">
       <div class="footer-section">
-        <h3 id="footerTitle" onclick="openAdminCheck()" style="font-family: 'Poppins', sans-serif; cursor: pointer;" title="Admin Panel">Shoukhin</h3>
+        <h3 id="footerTitle" style="font-family: 'Poppins', sans-serif;">Labonya Prohor</h3>
         <p>Guaranteed authentic products for your beauty and care.</p>
         <div class="counter-box">
           <i class="fa-solid fa-users"></i> Visitor Counter: <b id="visitorCount">0</b>
@@ -1563,13 +1582,13 @@
         <p><i class="fa-solid fa-envelope"></i> shoukhinonlineshop@gmail.com</p>
       </div>
     </div>
-    <p style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">&copy; 2026 Shoukhin. All Rights Reserved.</p>
+    <p style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">&copy; 2026 Labonya Prohor. All Rights Reserved.</p>
   </footer>
 
   <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update, remove, push, onDisconnect, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove, push, onDisconnect, get, query, orderByChild, equalTo, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDdlwyradz1KD4-Mu5vWT47Zp-ysuqRM1A",
@@ -1597,6 +1616,8 @@
     window.query = query;
     window.orderByChild = orderByChild;
     window.equalTo = equalTo;
+    window.increment = increment;
+    window.app = app;          // the FCM module below needs this (it is a separate module scope)
 
     // Analytics isn't needed to show products/cart/checkout, so it's fetched
     // separately after the DB connection is already set up — it no longer
@@ -1638,7 +1659,6 @@
     let agents = [];
     let appliedCoupon = null;
     let couponDiscount = 0;
-    let adminPassword = "01518411872";
     let paymentNumbers = { bkash: '01345409887', nagad: '01345409887', rocket: '01345409887' };
     
     let deliverySettings = {
@@ -1672,6 +1692,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       initApp();
+      watchMyOrders();
       updateVisitorCount();
       initLiveVisitorPresence();
       populateDistricts();
@@ -1992,7 +2013,6 @@
               document.getElementById('siteCodeHero').innerText = settings.siteCode;
               document.getElementById('settingSiteCode').value = settings.siteCode;
             }
-            if(settings.adminPass) adminPassword = settings.adminPass;
             if(settings.paymentNumbers) {
               paymentNumbers = settings.paymentNumbers;
               document.getElementById('bkashNum').value = paymentNumbers.bkash || '';
@@ -2143,6 +2163,7 @@
       if(id === 'imagePreviewModal' && imgPopupTimer) {
         clearInterval(imgPopupTimer);
       }
+      if (id === 'trackModal') stopTrackLive();
       if (id === 'cartModal' || id === 'trackModal' || id === 'appMenuModal') {
         setActiveBottomNav('home');
       }
@@ -2368,8 +2389,8 @@
     }
 
     function escapeHtml(text) {
-      if(!text) return '';
-      return text.replace(/[&<>"']/g, function(m) {
+      if(text === null || text === undefined) return '';
+      return String(text).replace(/[&<>"']/g, function(m) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
       });
     }
@@ -2902,13 +2923,14 @@
         return;
       }
 
-      if (!coupons.length && window.db && window.get) {
+      if (!coupons.some(c => c.code === codeInput) && window.db && window.get) {
         msgElem.style.color = "#777";
         msgElem.innerText = "Checking coupon...";
         try {
-          const snap = await window.get(window.ref(window.db, 'coupons'));
-          const cdata = snap.val();
-          coupons = cdata ? Object.values(cdata) : [];
+          // coupons are stored as coupons/COUPON-<CODE>; read just that one (the full coupon list is admin-only)
+          const snap = await window.get(window.ref(window.db, 'coupons/COUPON-' + codeInput));
+          const cv = snap.val();
+          coupons = (cv && cv.code === codeInput) ? [{ key: snap.key, ...cv }] : [];
         } catch (e) { coupons = []; }
       }
 
@@ -3178,13 +3200,19 @@ function checkout() {
       const payMethod = document.getElementById('paymentMethod').value;
       const payNumber = document.getElementById('payNumber').value.trim();
       const payAmount = document.getElementById('payAmount').value.trim();
+      const upazilaEl = document.getElementById('checkoutUpazila');
+      const upazila = upazilaEl ? upazilaEl.value : '';
 
       if(!name || !phone || !district || !address) {
         return alert('Please fill in all required fields.');
       }
 
-      // Bangladesh mobile number validation: exactly 11 digits and starts with 013/014/015/016/019
-      if(!/^(013|014|015|016|019)\\d{8}$/.test(phone)) {
+      if(upazilaEl && !upazilaEl.disabled && !upazila) {
+        return alert('Please select your Upazila (উপজেলা নির্বাচন করুন).');
+      }
+
+      // Bangladesh mobile number validation: exactly 11 digits and starts with 013-019
+      if(!/^01[3-9]\d{8}$/.test(phone)) {
         return alert('সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন। নম্বরটি 013, 014, 015, 016 অথবা 019 দিয়ে শুরু হতে হবে।');
       }
 
@@ -3195,7 +3223,7 @@ function checkout() {
       const orderId = 'ORD-' + Date.now();
       const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
       const grandTotal = Math.max(0, subtotal - couponDiscount) + deliveryCharge;
-      const fullAddress = `${address}, District: ${district}`;
+      const fullAddress = `${address}, ${upazila ? 'Upazila: ' + upazila + ', ' : ''}District: ${district}`;
 
       const orderData = {
         id: orderId,
@@ -3203,7 +3231,7 @@ function checkout() {
         userName: name,
         address: fullAddress,
         district: district,
-       upazila: upazila,
+        upazila: upazila,
         items: cart,
         subtotal: subtotal,
         couponCode: appliedCoupon ? appliedCoupon.code : 'N/A',
@@ -3222,19 +3250,20 @@ function checkout() {
         createdAt: Date.now()
       };
 
+      myOrdersSave(orderData);
       window.set(window.ref(window.db, 'orders/' + orderId), orderData);
+      // phone -> order ids index: lets a customer track by phone without anyone being able to list all orders
+      window.set(window.ref(window.db, 'order_index/' + phone + '/' + orderId), orderData.createdAt);
+      watchMyOrders();
 
       // Update coupon tracking stats in database
       if (appliedCoupon) {
         const cRef = window.ref(window.db, 'coupons/' + appliedCoupon.key);
-        const updatedUsed = (appliedCoupon.usedCount || 0) + 1;
-        const updatedSales = (appliedCoupon.totalSales || 0) + grandTotal;
-        const updatedDiscount = (appliedCoupon.totalDiscountGiven || 0) + couponDiscount;
 
         window.update(cRef, {
-          usedCount: updatedUsed,
-          totalSales: updatedSales,
-          totalDiscountGiven: updatedDiscount
+          usedCount: window.increment(1),
+          totalSales: window.increment(grandTotal),
+          totalDiscountGiven: window.increment(couponDiscount)
         });
       }
 
@@ -3255,9 +3284,9 @@ function checkout() {
           const prod = products.find(p => p.id === c.id);
           if(prod) {
             const pRef = window.ref(window.db, 'products/' + c.id);
-            const newStock = Math.max(0, prod.stock - c.qty);
-            const newSold = (prod.sold || 0) + c.qty;
-            window.update(pRef, { stock: newStock, sold: newSold });
+            // atomic: two customers buying at the same time no longer overwrite each other's stock count
+            const takeQty = Math.min(c.qty, Math.max(0, Number(prod.stock) || 0));
+            window.update(pRef, { stock: window.increment(-takeQty), sold: window.increment(c.qty) });
           }
         }
       });
@@ -3288,39 +3317,50 @@ function checkout() {
       const phone = order.userPhone;
       const historyRef = window.ref(window.db, 'customer_history/' + phone);
       
-      let existing = customerDataHistory[phone] || { phone: phone, name: order.userName, totalOrders: 0, completed: 0, cancelled: 0, totalSpent: 0 };
-      existing.name = order.userName;
-      existing.totalOrders = (existing.totalOrders || 0) + 1;
-
-      window.set(historyRef, existing);
+      // update() + increment: keeps completed / cancelled / totalSpent untouched (old code used set() and wiped them
+      // for every normal customer, because their browser never has the customer_history list loaded)
+      window.update(historyRef, { phone: phone, name: order.userName, totalOrders: window.increment(1) });
     }
 
-    async function trackOrder() {
-      const phone = document.getElementById('trackPhoneInput').value.trim();
-      const container = document.getElementById('trackResults');
-      
-      if (!phone) return alert('Please enter a phone number.');
-
-      container.innerHTML = '<p style="margin-top:10px;color:#777;">Searching...</p>';
-      let userOrders = [];
+    /* Customer-side order cache: the full `orders` list is loaded only for the admin, so customers keep their own orders here
+       (saved when they place an order and when they track by phone). Memo / tracking use it. */
+    const MY_ORDERS_KEY = 'lpMyOrders';
+    function myOrdersLoad() { try { const v = JSON.parse(localStorage.getItem(MY_ORDERS_KEY)); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } }
+    function myOrdersSave(list) {
       try {
-        const q = window.query(window.ref(window.db, 'orders'), window.orderByChild('userPhone'), window.equalTo(phone));
-        const snap = await window.get(q);
-        const odata = snap.val();
-        userOrders = odata ? Object.values(odata) : [];
-      } catch (e) {
-        container.innerHTML = '<p style="color:red; margin-top:10px;">Could not load orders. Please try again.</p>';
+        const all = myOrdersLoad();
+        (Array.isArray(list) ? list : [list]).forEach(o => { if (o && o.id) all[o.id] = o; });
+        const keep = Object.values(all).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 40);
+        const out = {}; keep.forEach(o => out[o.id] = o);
+        localStorage.setItem(MY_ORDERS_KEY, JSON.stringify(out));
+      } catch (e) {}
+    }
+
+    /* ---- Live order tracking ----
+       Old version did a one-time get(), so when the admin changed an order's status the customer kept seeing the old one
+       (and View Memo preferred a stale localStorage copy). Now the track list subscribes to the database and re-renders
+       the moment the admin changes anything; the cache is only a fallback when the database can't be reached. */
+    let trackUnsub = null;
+    function stopTrackLive() { if (trackUnsub) { try { trackUnsub(); } catch (e) {} trackUnsub = null; } }
+
+    function normalizePhone(raw) {
+      const bn = '০১২৩৪৫৬৭৮৯';
+      return String(raw || '')
+        .replace(/[০-৯]/g, d => bn.indexOf(d))
+        .replace(/[\s-]/g, '')
+        .replace(/^\+?88/, '');
+    }
+
+    function renderTrackResults(userOrders, container, phone, offlineNote) {
+      if (!userOrders.length) {
+        container.innerHTML = `<p style="color:red; margin-top:10px;">No orders found for: <b>${escapeHtml(phone)}</b></p>`;
         return;
       }
-
-      if (userOrders.length === 0) {
-        container.innerHTML = `<p style="color:red; margin-top:10px;">No orders found for: <b>${phone}</b></p>`;
-        return;
-      }
-
-      let html = '<h4 style="margin-top:10px;">Your Orders:</h4>';
+      userOrders = userOrders.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      let html = '<h4 style="margin-top:10px;">Your Orders: <span style="font-size:11px;color:#28a745;font-weight:normal;">&#9679; Live</span></h4>';
+      if (offlineNote) html += `<p style="font-size:12px;color:#c77700;">${offlineNote}</p>`;
       userOrders.forEach(o => {
-        let badgeColor = '#ffc107'; 
+        let badgeColor = '#ffc107';
         if (o.status === 'Confirm') badgeColor = '#17a2b8';
         if (o.status === 'Packaged') badgeColor = '#6f42c1';
         if (o.status === 'Currier Handovered') badgeColor = '#007bff';
@@ -3329,35 +3369,111 @@ function checkout() {
 
         html += `
           <div style="border:1px solid #ccc; border-radius:6px; padding:10px; margin-top:10px; background:#fff;">
-            <p><b>Order ID:</b> ${o.id}</p>
-            <p><b>Date:</b> ${o.date}</p>
+            <p><b>Order ID:</b> ${escapeHtml(o.id)}</p>
+            <p><b>Date:</b> ${escapeHtml(o.date)}</p>
             <p><b>Total:</b> ${o.total} ৳</p>
-            <p><b>Status:</b> <span style="background:${badgeColor}; color:white; padding:2px 8px; border-radius:10px; font-size:12px;">${o.status}</span></p>
+            <p><b>Status:</b> <span style="background:${badgeColor}; color:white; padding:2px 8px; border-radius:10px; font-size:12px;">${escapeHtml(o.status)}</span></p>
             <button onclick="closeModal('trackModal'); viewMemo('${o.id}')" style="margin-top:5px; padding:4px 8px; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">View Memo</button>
           </div>
         `;
       });
-
       container.innerHTML = html;
     }
 
+    function trackOrder() {
+      const phone = normalizePhone(document.getElementById('trackPhoneInput').value);
+      const container = document.getElementById('trackResults');
+
+      if (!phone) return alert('Please enter a phone number.');
+
+      stopTrackLive();
+      container.innerHTML = '<p style="margin-top:10px;color:#777;">Searching...</p>';
+
+      const cachedForPhone = () => Object.values(myOrdersLoad()).filter(o => o.userPhone === phone);
+      const fallback = (e) => {
+        const cached = cachedForPhone();
+        if (!cached.length) {
+          container.innerHTML = '<p style="color:red; margin-top:10px;">Could not load orders (' + String((e && (e.code || e.message)) || e).replace(/</g, '&lt;') + '). Please try again.</p>';
+          return;
+        }
+        renderTrackResults(cached, container, phone, 'Offline copy – may not show the latest status.');
+      };
+
+      try {
+        const orderMap = {};
+        const subs = {};
+        const render = () => {
+          const list = Object.values(orderMap);
+          if (list.length) myOrdersSave(list);
+          renderTrackResults(list, container, phone);
+        };
+        const watchOrder = (id) => {
+          if (subs[id]) return;
+          subs[id] = window.onValue(window.ref(window.db, 'orders/' + id), (snap) => {
+            const v = snap.val();
+            if (v) orderMap[id] = v; else delete orderMap[id];
+            render();
+          }, () => {});
+        };
+        // Orders of this device are always watched; the phone index adds orders placed from other devices.
+        cachedForPhone().forEach(o => watchOrder(o.id));
+        const unsubIndex = window.onValue(window.ref(window.db, 'order_index/' + phone), (snap) => {
+          const v = snap.val();
+          if (v) Object.keys(v).forEach(watchOrder);
+          if (!v && !Object.keys(subs).length) render();   // nothing found -> "No orders found"
+        }, (err) => { console.error('Track order failed:', err); stopTrackLive(); fallback(err); });
+        trackUnsub = () => { try { unsubIndex(); } catch (e) {} Object.values(subs).forEach(u => { try { u(); } catch (e) {} }); };
+      } catch (e) {
+        console.error('Track order failed:', e);
+        fallback(e);
+      }
+    }
+
+    /* Keeps this device's own orders in sync in the background and tells the customer when the admin changes a status
+       (works even if the Track window is closed). Orders that are Completed / Cancelled are not watched. */
+    const watchedOrderIds = new Set();
+    function showStatusToast(o) {
+      let box = document.getElementById('orderStatusToast');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'orderStatusToast';
+        box.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:99999;background:#222;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.3);max-width:90%;text-align:center;display:none;';
+        document.body.appendChild(box);
+      }
+      box.textContent = 'Order ' + o.id + ': ' + o.status;
+      box.style.display = 'block';
+      clearTimeout(showStatusToast._t);
+      showStatusToast._t = setTimeout(() => { box.style.display = 'none'; }, 6000);
+    }
+    function watchMyOrders() {
+      if (!(window.db && window.ref && window.onValue)) return;
+      Object.values(myOrdersLoad()).forEach(o => {
+        if (!o || !o.id || watchedOrderIds.has(o.id)) return;
+        if (o.status === 'Completed' || o.status === 'Cancelled') return;
+        watchedOrderIds.add(o.id);
+        let first = true;
+        window.onValue(window.ref(window.db, 'orders/' + o.id), (snap) => {
+          const fresh = snap.val();
+          if (!fresh) return;
+          const old = myOrdersLoad()[fresh.id];
+          myOrdersSave(fresh);
+          if (!first && old && old.status !== fresh.status) showStatusToast(fresh);
+          first = false;
+        }, () => { watchedOrderIds.delete(o.id); });
+      });
+    }
+
+    // >>> Put the real address of your admin page here (file name or full URL), e.g. 'admin.html' or 'https://yoursite.com/admin.html'
+    const ADMIN_PAGE_URL = 'admin.html';
+
     function openAdminCheck() {
       // Admin management has moved to its own separate portal page.
-      window.location.href = 'admin.html';
+      window.location.href = ADMIN_PAGE_URL;
     }
 
     function loginAdmin() {
-      const p = document.getElementById('adminPassInput').value;
-      if(p === adminPassword) {
-        sessionStorage.setItem('isAdminLoggedIn', 'true');
-        initAdminListeners();
-        runAdminProductRenders();
-        closeModal('adminLoginModal');
-        document.getElementById('adminPanel').style.display = 'block';
-        document.getElementById('notifBtn').style.display = 'inline-block';
-      } else {
-        alert('Incorrect Admin Password!');
-      }
+      // Admin login lives only in the separate admin page (it uses Firebase Authentication).
+      window.location.href = ADMIN_PAGE_URL;
     }
 
     function logoutAdmin() {
@@ -3643,14 +3759,14 @@ function checkout() {
       orders.forEach(o => {
         let paymentDisplay = `<b>${o.paymentMethod || 'COD'}</b>`;
         if(o.paymentMethod === 'Online') {
-          paymentDisplay += `<br><small>Num: ${o.paymentNumber}<br>Paid: ${o.paymentAmount}৳</small>`;
+          paymentDisplay += `<br><small>Num: ${escapeHtml(o.paymentNumber)}<br>Paid: ${o.paymentAmount}৳</small>`;
         }
 
         tbody.innerHTML += `
           <tr>
             <td>${o.id}</td>
-            <td><button class="cust-btn" onclick="showCustomerHistory('${o.userPhone}')">${o.userName}</button></td>
-            <td>${o.userPhone}</td>
+            <td><button class="cust-btn" onclick="showCustomerHistory('${escapeHtml(o.userPhone)}')">${escapeHtml(o.userName)}</button></td>
+            <td>${escapeHtml(o.userPhone)}</td>
             <td>${paymentDisplay}</td>
             <td>${o.total}৳</td>
             <td>
@@ -3790,7 +3906,7 @@ function checkout() {
           <div class="notif-item">
             <div>
               <b>${isReq ? 'Product Request' : 'New Order: ' + n.orderId}</b><br>
-              <small>${n.userName} (${n.userPhone})</small><br>
+              <small>${escapeHtml(n.userName)} (${escapeHtml(n.userPhone)})</small><br>
               <small>${isReq ? 'Msg: ' + n.total : 'Total: ' + n.total + '৳ | ' + n.paymentMethod}</small>
             </div>
             <button class="notif-item-del" onclick="deleteNotification('${n.notifKey}')">Del</button>
@@ -3917,7 +4033,7 @@ function checkout() {
     }
 
 
-    /* ================= Shoukhin Agent Management ================= */
+    /* ================= Labonya Prohor Agent Management ================= */
     function escapeAttr(value) {
       return escapeHtml(String(value || '')).replace(/`/g, '&#96;');
     }
@@ -4013,7 +4129,7 @@ function checkout() {
       if (!grid) return;
       populateAgentSelectors();
       if (!agents.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888; padding:22px; background:#fff; border-radius:12px;">No Shoukhin Agent added yet.</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888; padding:22px; background:#fff; border-radius:12px;">No Labonya Prohor Agent added yet.</div>';
         return;
       }
       grid.innerHTML = agents.map(a => {
@@ -4661,15 +4777,7 @@ function checkout() {
     }
 
     function changeAdminPassword() {
-      const newPass = document.getElementById('newAdminPass').value.trim();
-      if(!newPass) return alert("Enter new password!");
-
-      adminPassword = newPass;
-      if(window.db) {
-        window.update(window.ref(window.db, 'settings'), { adminPass: newPass });
-        alert("Admin password updated!");
-        document.getElementById('newAdminPass').value = '';
-      }
+      alert('Admin password শুধু Admin Panel থেকে পরিবর্তন করা যাবে।');
     }
 
     function initLiveVisitorPresence(retryCount) {
@@ -4716,7 +4824,7 @@ function checkout() {
           if(!sessionStorage.getItem('visited')) {
             count++;
             sessionStorage.setItem('visited', 'true');
-            window.set(vRef, count);
+            window.set(vRef, window.increment(1));
           }
           if(document.getElementById('visitorCount')) {
             document.getElementById('visitorCount').innerText = count;
@@ -4725,8 +4833,13 @@ function checkout() {
       }
     }
 
-    function viewMemo(orderId) {
-      const o = orders.find(item => item.id === orderId);
+    async function viewMemo(orderId) {
+      // Always try the database first so the memo shows the CURRENT status; the local copy is only a fallback.
+      let o = null;
+      if (window.db && window.get) {
+        try { const snap = await window.get(window.ref(window.db, 'orders/' + orderId)); o = snap.val(); if (o) myOrdersSave(o); } catch (e) { console.error('Memo load failed:', e); }
+      }
+      if (!o) o = orders.find(item => item.id === orderId) || myOrdersLoad()[orderId];
       if(!o) return alert("Order not found!");
 
       currentMemoId = orderId;
@@ -4750,16 +4863,16 @@ function checkout() {
 
       let couponRowMemo = '';
       if(o.couponCode && o.couponCode !== 'N/A' && o.couponDiscount > 0) {
-        couponRowMemo = `<p><b>Coupon Discount (${o.couponCode}):</b> -${o.couponDiscount} ৳</p>`;
+        couponRowMemo = `<p><b>Coupon Discount (${escapeHtml(o.couponCode)}):</b> -${o.couponDiscount} ৳</p>`;
       }
 
       const memoHtml = `
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
           <div>
             <p><b>Order ID:</b> ${o.id}</p>
-            <p><b>Customer Name:</b> ${o.userName}</p>
-            <p><b>Phone:</b> ${o.userPhone}</p>
-            <p><b>Address:</b> ${o.address}</p>
+            <p><b>Customer Name:</b> ${escapeHtml(o.userName)}</p>
+            <p><b>Phone:</b> ${escapeHtml(o.userPhone)}</p>
+            <p><b>Address:</b> ${escapeHtml(o.address)}</p>
           </div>
           <div style="text-align:right;">
             <p><b>Date:</b> ${o.date}</p>
@@ -4821,6 +4934,7 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
     const reg = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
     if (Notification.permission === 'default') await Notification.requestPermission();
     if (Notification.permission !== 'granted') return;
+    const app = window.app, db = window.db, set = window.set, ref = window.ref;
     const messaging = getMessaging(app);
     const token = await getToken(messaging, {vapidKey:SHOUKHIN_VAPID_KEY,serviceWorkerRegistration:reg});
     if (!token) return;
@@ -4829,7 +4943,7 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
     await set(ref(db, 'customer_fcm_tokens/' + encodeURIComponent(id)), {token,updatedAt:Date.now()});
     onMessage(messaging, payload => {
       const n=payload.notification||{};
-      if (Notification.permission==='granted' && document.visibilityState==='visible') new Notification(n.title||'Shoukhin', {body:n.body||'',icon:n.icon||'/favicon.ico',data:payload.data||{}});
+      if (Notification.permission==='granted' && document.visibilityState==='visible') new Notification(n.title||'Labonya Prohor', {body:n.body||'',icon:n.icon||'/favicon.ico',data:payload.data||{}});
     });
   } catch(e) { console.warn('FCM registration failed',e); }
 })();
@@ -4877,6 +4991,61 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
         clearInterval(burstTimer);
       }, 6000);
     });
+  })();
+</script>
+
+<script>
+/* Labonya Prohor: live canvas animation (drifting petals + sparkles) and shop-logo loader */
+(function () {
+  var FALLBACK = "https://ourdestination.github.io/shoukhin/favicon.png", KEY = "lpShopLogo";
+  window.lpCachedLogo = function () { try { return localStorage.getItem(KEY) || FALLBACK; } catch (e) { return FALLBACK; } };
+  window.lpLiveLogo = function (imgs) {                       // show cached logo now, then the live one from the database
+    var set = function (u) { imgs.forEach(function (i) { if (i && i.src !== u) i.src = u; }); };
+    set(window.lpCachedLogo());
+    var n = 0, t = setInterval(function () {
+      if (++n > 60) return clearInterval(t);
+      if (!(window.db && window.ref && window.onValue)) return;
+      clearInterval(t);
+      try { window.onValue(window.ref(window.db, "settings/logo"), function (s) {
+        var u = s.val(); if (!u || typeof u !== "string") return;
+        try { localStorage.setItem(KEY, u); } catch (e) {}
+        set(u);
+      }, function () {}); } catch (e) {}
+    }, 150);
+  };
+  window.lpAnimate = function (canvas, o) {
+    var ctx = canvas.getContext("2d"), W = 0, H = 0, P = [], dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var cols = o.colors, N = o.count || 46;
+    function size() { W = canvas.clientWidth; H = canvas.clientHeight; canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    function mk(init) { return { x: Math.random() * W, y: init ? Math.random() * H : H + 20, r: 4 + Math.random() * 11, vy: 0.35 + Math.random() * 0.9, ph: Math.random() * 6.28, sw: 0.6 + Math.random() * 1.2,
+      rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.04, c: cols[(Math.random() * cols.length) | 0], star: Math.random() < 0.3, a: 0.35 + Math.random() * 0.5 }; }
+    size(); for (var i = 0; i < N; i++) P.push(mk(true));
+    window.addEventListener("resize", size);
+    function petal(p) { ctx.beginPath(); ctx.moveTo(0, -p.r); ctx.bezierCurveTo(p.r * 0.9, -p.r * 0.5, p.r * 0.7, p.r * 0.7, 0, p.r); ctx.bezierCurveTo(-p.r * 0.7, p.r * 0.7, -p.r * 0.9, -p.r * 0.5, 0, -p.r); ctx.fill(); }
+    function star(p) { var r = p.r * 0.7; ctx.beginPath(); for (var k = 0; k < 8; k++) { var rr = k % 2 ? r * 0.28 : r, a = k * Math.PI / 4; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches, last = performance.now();
+    function frame(now) {
+      if (!canvas.isConnected || (o.stop && o.stop())) return;
+      if (o.pause && o.pause()) { last = now; return requestAnimationFrame(frame); }
+      var dt = Math.min(40, now - last) / 16.7; last = now;
+      ctx.clearRect(0, 0, W, H);
+      if (o.glow) { var g = ctx.createRadialGradient(W / 2, H * 0.4, 10, W / 2, H * 0.4, Math.max(W, H) * 0.6); g.addColorStop(0, o.glow); g.addColorStop(1, "rgba(255,255,255,0)"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+      for (var i = 0; i < P.length; i++) {
+        var p = P[i]; if (!reduce) { p.y -= p.vy * dt; p.ph += 0.02 * dt; p.x += Math.sin(p.ph) * p.sw * dt; p.rot += p.vr * dt; }
+        if (p.y < -30) P[i] = mk(false);
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.a * (p.star ? (0.6 + 0.4 * Math.sin(p.ph * 3)) : 1); ctx.fillStyle = p.c;
+        if (p.star) star(p); else petal(p); ctx.restore();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  };
+})();
+</script>
+<script>
+  (function () {
+    var sp = document.getElementById('welcomeSplash');
+    lpLiveLogo([document.getElementById('wsLogo')]);
   })();
 </script>
 <script>
