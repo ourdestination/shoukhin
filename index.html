@@ -264,6 +264,26 @@
 
     .container { padding: 15px 4%; flex: 1; }
 
+
+    /* ===== Product Search ===== */
+    .product-search-wrap { position: relative; margin-bottom: 14px; }
+    .product-search-box { display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid #f0d0e0; border-radius: 30px; padding: 0 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: border-color .2s; }
+    .product-search-box:focus-within { border-color: var(--primary); }
+    .product-search-box > i { color: var(--primary); font-size: 14px; }
+    .product-search-box input { flex: 1; border: none; outline: none; background: transparent; padding: 11px 0; font-size: 14px; color: var(--dark); min-width: 0; }
+    .product-search-clear { display: none; border: none; background: #eee; color: #555; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 12px; line-height: 24px; padding: 0; }
+    .product-search-suggest { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.18); max-height: 340px; overflow-y: auto; z-index: 900; }
+    .ps-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer; border-bottom: 1px solid #f5f5f5; }
+    .ps-item:last-child { border-bottom: none; }
+    .ps-item:hover, .ps-item:active { background: #fdf0f6; }
+    .ps-item img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #f3f3f3; }
+    .ps-info { flex: 1; min-width: 0; }
+    .ps-name { font-size: 13.5px; font-weight: 600; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ps-name mark { background: none; color: var(--primary); font-weight: 700; }
+    .ps-meta { font-size: 11.5px; color: #888; }
+    .ps-price { font-size: 13px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+    .ps-empty { padding: 14px; text-align: center; color: #888; font-size: 13px; }
+
     .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; color: var(--dark); display: flex; align-items: center; justify-content: space-between; }
     
     .category-grid {
@@ -758,6 +778,14 @@
     <!-- Main Product Grid -->
     <div class="section-title">
       <span id="currentCategoryTitle">All Products</span>
+    </div>
+    <div class="product-search-wrap" id="productSearchWrap">
+      <div class="product-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="productSearchInput" placeholder="Search products by name..." autocomplete="off" oninput="onProductSearchInput()" onfocus="onProductSearchInput()">
+        <button type="button" class="product-search-clear" id="productSearchClear" onclick="clearProductSearch()" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="product-search-suggest" id="productSearchSuggest"></div>
     </div>
     <div id="productGrid" class="grid"></div>
 
@@ -2340,6 +2368,83 @@
       renderProducts();
     }
 
+
+    // ===== Product Search (live suggestions + grid filter) =====
+    let productSearchQuery = '';
+
+    function onProductSearchInput() {
+      const input = document.getElementById('productSearchInput');
+      const box = document.getElementById('productSearchSuggest');
+      const clearBtn = document.getElementById('productSearchClear');
+      if (!input || !box) return;
+      const raw = input.value.trim();
+      const q = raw.toLowerCase();
+      const changed = (productSearchQuery !== raw);
+      productSearchQuery = raw;
+      clearBtn.style.display = raw ? 'block' : 'none';
+
+      if (!q) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        if (changed) renderProducts();
+        return;
+      }
+
+      const starts = [], contains = [];
+      products.forEach(p => {
+        const n = String(p.name || '').toLowerCase();
+        if (n.startsWith(q)) starts.push(p);
+        else if (n.includes(q)) contains.push(p);
+      });
+      const matches = starts.concat(contains).slice(0, 8);
+
+      if (matches.length === 0) {
+        box.innerHTML = '<div class="ps-empty">No matching product found</div>';
+      } else {
+        box.innerHTML = matches.map(p => {
+          const img = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://via.placeholder.com/60');
+          const hasDisc = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+          const price = hasDisc ? p.discountPrice : p.price;
+          const name = String(p.name || '');
+          const idx = name.toLowerCase().indexOf(q);
+          const nameHtml = idx >= 0
+            ? escapeHtml(name.slice(0, idx)) + '<mark>' + escapeHtml(name.slice(idx, idx + q.length)) + '</mark>' + escapeHtml(name.slice(idx + q.length))
+            : escapeHtml(name);
+          return `<div class="ps-item" onclick="selectSearchProduct('${p.id}')">
+            <img src="${img}" alt="" loading="lazy">
+            <div class="ps-info"><div class="ps-name">${nameHtml}</div><div class="ps-meta">${escapeHtml(p.category || '')}</div></div>
+            <div class="ps-price">${price} ৳</div>
+          </div>`;
+        }).join('');
+      }
+      box.style.display = 'block';
+      if (changed) renderProducts();
+    }
+
+    function selectSearchProduct(pId) {
+      document.getElementById('productSearchSuggest').style.display = 'none';
+      openProductDetail(pId);
+    }
+
+    function clearProductSearch() {
+      const input = document.getElementById('productSearchInput');
+      input.value = '';
+      onProductSearchInput();
+      input.focus();
+    }
+
+    document.addEventListener('click', function(e) {
+      const wrap = document.getElementById('productSearchWrap');
+      const box = document.getElementById('productSearchSuggest');
+      if (wrap && box && !wrap.contains(e.target)) box.style.display = 'none';
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const box = document.getElementById('productSearchSuggest');
+        if (box) box.style.display = 'none';
+      }
+    });
+
     let _renderProductsQueued = false;
     function renderProducts() {
       if (_renderProductsQueued) return;
@@ -2355,7 +2460,9 @@
       grid.innerHTML = '';
       offerGrid.innerHTML = '';
 
-      const filtered = selectedCategory === 'All' ? products : products.filter(p => p.category === selectedCategory);
+      let filtered = selectedCategory === 'All' ? products : products.filter(p => p.category === selectedCategory);
+      const _q = (typeof productSearchQuery === 'string') ? productSearchQuery.trim().toLowerCase() : '';
+      if (_q) filtered = filtered.filter(p => String(p.name || '').toLowerCase().includes(_q));
       const offerProducts = products.filter(p => isOfferActive(p));
       const activeCombos = comboOffers.filter(c => isComboActive(c));
 
@@ -2379,7 +2486,7 @@
       }
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#777; padding:20px;">No products available in this category.</p>';
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#777; padding:20px;">' + (_q ? 'No products found for "' + escapeHtml(productSearchQuery.trim()) + '".' : 'No products available in this category.') + '</p>';
         return;
       }
 
