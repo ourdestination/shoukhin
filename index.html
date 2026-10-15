@@ -820,7 +820,7 @@
   </header>
 
   <div class="hero">
-    <img id="heroSiteLogo" src="Up.png" alt="Labonya Prohor Online Shop" class="hero-logo-img" style="display:block;" onclick="showFullImage(this.src)">
+    <img id="heroSiteLogo" src="Up.png" alt="Labonya Prohor Online Shop" class="hero-logo-img" style="display:block;" onclick="heroLogoClick(event)" ondblclick="heroLogoDblClick(event)">
     <span id="siteCodeHero" class="site-code-hero"></span>
   </div>
 
@@ -5449,6 +5449,64 @@ const SHOUKHIN_VAPID_KEY = "BPd7dsoetnhWWoSnxB9YKT0184S5WjVYnVIS2J9QMUjZZC-X5vGY
     }, { passive: false });
     sync();
   })();
+</script>
+
+<script>
+// Hidden admin shortcut: double-click the lotus flower on the banner (desktop mode only)
+(function(){
+  var ADMIN_URL = 'https://ourdestination.github.io/shoukhin_admin/';
+  // flower area as % of banner image: left, top, width, height
+  var Z = { x1: 17.5, x2: 25.0, y1: 4.5, y2: 17.0 };
+  var timer = null;
+  function inFlower(e){
+    var r = e.target.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width * 100;
+    var y = (e.clientY - r.top) / r.height * 100;
+    return x >= Z.x1 && x <= Z.x2 && y >= Z.y1 && y <= Z.y2;
+  }
+  var PIN = '2580';
+  function askPin(){
+    if (document.getElementById('adminPinBox')) return;
+    var b = document.createElement('div');
+    b.id = 'adminPinBox';
+    b.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;';
+    b.innerHTML = '<div style="background:#fff;padding:22px 24px;border-radius:14px;width:290px;text-align:center;font-family:inherit;box-shadow:0 10px 30px rgba(0,0,0,.3)">' +
+      '<div style="font-weight:700;margin-bottom:12px;color:#333">Enter PIN</div>' +
+      '<input id="adminPinInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px;font-size:1.2rem;text-align:center;letter-spacing:8px;border:1px solid #ccc;border-radius:8px">' +
+      '<div id="adminPinErr" style="color:#d32f2f;font-size:.85rem;min-height:20px;margin-top:6px"></div>' +
+      '<div style="display:flex;gap:8px;margin-top:6px">' +
+      '<button id="adminPinCancel" style="flex:1;padding:9px;border:none;border-radius:8px;background:#eee;cursor:pointer">Cancel</button>' +
+      '<button id="adminPinOk" style="flex:1;padding:9px;border:none;border-radius:8px;background:#e91e63;color:#fff;cursor:pointer">OK</button></div></div>';
+    document.body.appendChild(b);
+    var inp = document.getElementById('adminPinInput');
+    inp.focus();
+    function close(){ b.remove(); }
+    function check(){
+      if (inp.value === PIN) { close(); window.open(ADMIN_URL, '_blank'); }
+      else { document.getElementById('adminPinErr').textContent = 'Wrong PIN'; inp.value = ''; inp.focus(); }
+    }
+    document.getElementById('adminPinOk').onclick = check;
+    document.getElementById('adminPinCancel').onclick = close;
+    inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') check(); if (ev.key === 'Escape') close(); });
+  }
+  function isDesktop(){ return window.innerWidth >= 900; }
+  window.heroLogoClick = function(e){
+    var src = e.target.src;
+    // on flower in desktop mode: wait a moment so a double-click can cancel the normal single-click action
+    if (isDesktop() && inFlower(e)) {
+      clearTimeout(timer);
+      timer = setTimeout(function(){ showFullImage(src); }, 300);
+    } else {
+      showFullImage(src);
+    }
+  };
+  window.heroLogoDblClick = function(e){
+    if (isDesktop() && inFlower(e)) {
+      clearTimeout(timer);
+      askPin();
+    }
+  };
+})();
 </script>
 </body>
 </html>
